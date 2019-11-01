@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tech on My New Hugo Site</title>
+    <title>Tech on 阿岑的部落</title>
     <link>https://ACen6XD.github.io/categories/tech/</link>
-    <description>Recent content in Tech on My New Hugo Site</description>
+    <description>Recent content in Tech on 阿岑的部落</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 04 Jun 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 01 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ACen6XD.github.io/categories/tech/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>An Example Post</title>
+      <title>JVM第一章知识点总结</title>
       <link>https://ACen6XD.github.io/post/jvmchap1/</link>
-      <pubDate>Mon, 04 Jun 2018 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 01 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>https://ACen6XD.github.io/post/jvmchap1/</guid>
-      <description>#Java内存区域 ##1.运行时数据区域 ###1.1程序计数器</description>
+      <description>#Java内存区域 ##1.运行时数据区域 * 程序计数器(Program Counter Register) 概念：该部分是一块较小的内存空间，它可以看作是**当前线程所执行的字</description>
     </item>
     
   </channel>
