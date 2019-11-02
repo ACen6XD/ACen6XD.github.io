@@ -12,12 +12,12 @@
     
     
     <item>
-      <title>JVM第一章知识点总结</title>
+      <title>JVM第一章知识点总结(1)</title>
       <link>https://ACen6XD.github.io/post/jvmchap1/</link>
       <pubDate>Fri, 01 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>https://ACen6XD.github.io/post/jvmchap1/</guid>
-      <description>#Java内存区域 ##1.运行时数据区域 * 程序计数器(Program Counter Register) 概念：该部分是一块较小的内存空间，它可以看作是**当前线程所执行的字</description>
+      <description>Java内存区域与内存溢出异常(两个链接没做) 运行时数据区域 程序计数器(Program Counter Register) &amp;amp;概念： &amp;ensp;&amp;ensp;&amp;ensp</description>
     </item>
     
   </channel>

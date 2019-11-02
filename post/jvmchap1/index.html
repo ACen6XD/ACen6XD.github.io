@@ -15,9 +15,9 @@
     
 
     
-    <meta name="title" content="JVM第一章知识点总结" />
-    <meta property="og:title" content="JVM第一章知识点总结" />
-    <meta property="twitter:title" content="JVM第一章知识点总结" />
+    <meta name="title" content="JVM第一章知识点总结(1)" />
+    <meta property="og:title" content="JVM第一章知识点总结(1)" />
+    <meta property="twitter:title" content="JVM第一章知识点总结(1)" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="Java,博客, 个人网站">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>JVM第一章知识点总结- ACen Blog</title>
+    <title>JVM第一章知识点总结(1)- ACen Blog</title>
 
     <link rel="canonical" href="/post/jvmchap1/">
 
@@ -105,7 +105,7 @@
                     </li>
                     
                     <li>
-                        <a href="/categories/tech">tech</a>
+                        <a href="/categories/study">study</a>
                     </li>
                     
                     
@@ -172,7 +172,7 @@
                         </a>
                         
                     </div>
-                    <h1>JVM第一章知识点总结</h1>
+                    <h1>JVM第一章知识点总结(1)</h1>
                     <h2 class="subheading">Java内存区域与内存溢出异常</h2>
                     <span class="meta">
                         Posted by 
@@ -208,23 +208,166 @@
                 <header>
                     <h2>TOC</h2>
                 </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#java内存区域与内存溢出异常-两个链接没做">Java内存区域与内存溢出异常(两个链接没做)</a>
+<ul>
+<li><a href="#运行时数据区域">运行时数据区域</a>
+<ul>
+<li><a href="#font-color-36648b-程序计数器-program-counter-register-font"><strong><font color=#36648B >程序计数器(Program Counter Register)</font></strong></a></li>
+<li><a href="#font-color-36648b-java虚拟机栈-java-virtual-machine-stacks-font"><strong><font color=#36648B >Java虚拟机栈(Java Virtual Machine Stacks)</font></strong></a></li>
+<li><a href="#font-color-36648b-本地方法栈-native-method-stack-font"><strong><font color=#36648B >本地方法栈(Native Method Stack)</font></strong></a></li>
+<li><a href="#font-color-36648b-java堆-java-heap-font"><strong><font color=#36648B >Java堆(Java Heap)</font></strong></a></li>
+<li><a href="#font-color-36648b-方法区-method-area-font"><strong><font color=#36648B >方法区(Method Area)</font></strong></a></li>
+<li><a href="#font-color-36648b-运行时常量池-runtime-constant-pool-font"><strong><font color=#36648B >运行时常量池(Runtime Constant Pool)</font></strong></a></li>
+<li><a href="#font-color-36648b-直接内存-direct-memory-font"><strong><font color=#36648B >直接内存(Direct Memory)</font></strong></a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
                 
                 
-                <p>#Java内存区域
-##1.运行时数据区域
-* <strong>程序计数器(Program Counter Register)</strong></p>
 
-<pre><code>概念：该部分是一块较小的内存空间，它可以看作是**当前线程所执行的字节码的行号指示器**。
+<h1 id="java内存区域与内存溢出异常-两个链接没做">Java内存区域与内存溢出异常(两个链接没做)</h1>
 
-特征：线程私有。
-</code></pre>
+<p><br></p>
+
+<h2 id="运行时数据区域">运行时数据区域</h2>
+
+<p><img src="/img/jvm_memory.jpg" alt="" /></p>
 
 <ul>
-<li><p><strong>Java虚拟机栈(Java Virtual Machine Stacks)</strong></p>
+<li><h3 id="font-color-36648b-程序计数器-program-counter-register-font"><strong><font color=#36648B >程序计数器(Program Counter Register)</font></strong></h3>
 
-<p>概念：多少大</p>
+<p>&amp;概念：</p>
 
-<p>特征：线程私有，生命周期与线程相同。</p></li>
+<p>&ensp;&ensp;&ensp;&ensp;该部分是一块较小的内存空间，它可以看作是<strong>当前线程所执行的字节码的行号指示器</strong>。</p>
+
+<p>&amp;特征：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>线程私有</strong>。</p>
+
+<p>&amp;描述：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;此内存区域是唯一一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。</p>
+
+<p><br></p></li>
+
+<li><h3 id="font-color-36648b-java虚拟机栈-java-virtual-machine-stacks-font"><strong><font color=#36648B >Java虚拟机栈(Java Virtual Machine Stacks)</font></strong></h3>
+
+<p>&amp;概念：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>Java方法</strong>执行的内存模型，也就是每个方法在执行的同时都会创建一个栈帧(Stack Frame)，每一个方法从调用直到执行完成的过程，就对应着一个栈帧在虚拟机中<u>入栈</u>和<u>出栈</u>的过程。</p>
+
+<p>&amp;特征：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>线程私有，生命周期与线程相同</strong>。</p>
+
+<p>&amp;描述：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;栈帧中会存放<strong>局部变量表</strong>(定义的局部变量)，<strong>操作数栈</strong>(执行的指令参数)，<strong>动态链接</strong>(运行时常量池的方法引用)，<strong>方法出口</strong>等信息。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;局部变量表中存放了编译期可知的各种基本类型数据(boolean,byte,char,short,int,float,long,double)、对象引用(reference类型，他不等同于对象本身，可能是一个指向对象起始地址的引用指针，也可能是指向一个代表对象的句柄或其他于此对象相关的位置)和returnAddress(指向了一条字节码指令地址)类型。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;这个区域规定了两种异常——<strong>StackOverflowError异常</strong> ：(纵向)线程的请求栈深度大于虚拟机所允许的深度；<strong>OutOfMemoryError异常</strong>：(横向）如果虚拟机可以动态扩展，扩展时无法申请到足够内存。</p>
+
+<p><br></p></li>
+
+<li><h3 id="font-color-36648b-本地方法栈-native-method-stack-font"><strong><font color=#36648B >本地方法栈(Native Method Stack)</font></strong></h3>
+
+<p>&amp;概念：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;与虚拟机栈发挥的作用很相似，虚拟机栈为虚拟机方法也就是Java方法(字节码)服务，本地方法栈则为虚拟机用到的Native方法服务。</p>
+
+<p>&amp;特征：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>线程私有</strong>。</p>
+
+<p>&amp;描述：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;有的虚拟机直接就把本地方法栈和虚拟机栈合二为一。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;与虚拟机栈一样，这个区域也会抛出两种异常——<strong>StackOverflowError异常</strong> 和 <strong>OutOfMemoryError异常</strong> 。</p>
+
+<p><br></p></li>
+
+<li><h3 id="font-color-36648b-java堆-java-heap-font"><strong><font color=#36648B >Java堆(Java Heap)</font></strong></h3>
+
+<p><img src="/img/javaHeap.jpg" alt="" /></p>
+
+<p>&amp;概念：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;Java虚拟机管理中内存最大的一块，在虚拟机启动时创建。此区域的唯一目的就是存放对象实例，同时也是垃圾收集器管理的主要区域。其中可以细分为<strong>新生代(Young Generation)</strong>和<strong>老年代(Old Generation)</strong>。从内存分配角度来看，线程共享的Java堆中可能划分出多个线程私有的分配缓冲区(Thraed Local Allocation Buffer,TLAB)。具体的细节可以点击查看。</p>
+
+<p>&amp;特征：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>线程共享</strong>。</p>
+
+<p>&amp;描述：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;Java堆可以处理物理上的不连续，只要逻辑上连续即可。在实现时，即可以实现成固定大小的，也可以是扩展的，目前主流的虚拟机都是按照可扩展来实现——通过<strong>-Xmx</strong>(堆内存的最大值)和<strong>-Xms</strong>(堆内存的最小值)控制。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;如果在堆中没有内存完成实例分配，并且堆内存无法再扩展时，会抛出<strong>OutOfMemoryError异常</strong>。</p>
+
+<p><br></p></li>
+
+<li><h3 id="font-color-36648b-方法区-method-area-font"><strong><font color=#36648B >方法区(Method Area)</font></strong></h3>
+
+<p>&amp;概念：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;它用于存储已被虚拟机加载的<strong>类信息</strong>、<strong>常量</strong>、<strong>静态变量</strong>、<strong>即使编译器译后的代码</strong>等数据。属于Java虚拟机中堆的一个逻辑部分，要和Java堆区分开来。在HotSpot虚拟机上开发的人来说，习惯称方法去为永久代(Permanent Generation),本质上两者不等价。</p>
+
+<p>&amp;特征：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>线程共享</strong>。</p>
+
+<p>&amp;描述：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;当方法无法满足内存分配需求时，抛出<strong>OutOfMemoryError异常</strong> 。</p>
+
+<p><br></p></li>
+
+<li><h3 id="font-color-36648b-运行时常量池-runtime-constant-pool-font"><strong><font color=#36648B >运行时常量池(Runtime Constant Pool)</font></strong></h3>
+
+<p>&amp;概念：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>是方法区的一部分</strong>，在Class文件除了存放在方法区中的类的版本、字段、方法、接口等信息外，其中有还一项信息是<strong>常量池</strong>，用于存放编译期生成的各种字面量和符号引用，这部分内容将在类加载后进入方法区的运行时常量池存放。</p>
+
+<p>&amp;特征：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>线程共享</strong>。</p>
+
+<p>&amp;描述：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;运行时常量池相对于Class文件常量池而言，一个重要特征就是具备动态性，并非预置入Class文件常量池的内容才能进入方法区运行时常量池，运行期间也可能将新的常量放入池中。同时Java虚拟机对于Class文件的每一部分(包括Class文件常量池，关于Class文件的更多内容可以查看)格式都有着严格规定，但对于运行时常量池，Java虚拟机规范没有做任何细节。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;当常量池无法再申请到内存分配需求时，抛出<strong>OutOfMemoryError异常</strong> 。</p>
+
+<p><br></p></li>
+
+<li><h3 id="font-color-36648b-直接内存-direct-memory-font"><strong><font color=#36648B >直接内存(Direct Memory)</font></strong></h3>
+
+<p>&amp;概念：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;直接内存并不是虚拟机运行时数据区的一部分，也不是Java虚拟机规范中定义的内存区域。但是这部分内存使用很频繁，同时也容易造成异常出现。</p>
+
+<p>&amp;特征：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>线程共享</strong>。</p>
+
+<p>&amp;描述：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;运用场景：NIO类使用Native函数库直接分配堆外内存，通过一个存储在Java堆中的DirectByteBuffer对象作为这块内存的引用进行操作。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;如果各个内存区域总和大于物理内存限制，从而导致动态扩展时抛出<strong>OutOfMemoryError异常</strong> 。</p>
+
+<p><br></p>
+
+<p><br></p>
+
+<p>内容主要参考来源：《深入理解Java虚拟机》第二版——周志明</p>
+
+<p>图片来源：网络</p></li>
 </ul>
 
 
