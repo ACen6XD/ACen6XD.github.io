@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="阿岑的部落">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://ACen6XD.github.io//img/tag-bg.jpg">
+    <meta property="twitter:image" content="https://ACen6XD.github.io//img/tag-bg.jpg" />
+    
+
+    
+    <meta name="title" content="JVM第一章知识点总结(2)" />
+    <meta property="og:title" content="JVM第一章知识点总结(2)" />
+    <meta property="twitter:title" content="JVM第一章知识点总结(2)" />
+    
+
+    
+    <meta name="description" content="复习虚拟机内存中数据的其他细节，对象如何创建、布局和访问">
+    <meta property="og:description" content="复习虚拟机内存中数据的其他细节，对象如何创建、布局和访问" />
+    <meta property="twitter:description" content="复习虚拟机内存中数据的其他细节，对象如何创建、布局和访问" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Java,博客, 个人网站">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>JVM第一章知识点总结(2)- ACen Blog</title>
+
+    <link rel="canonical" href="/post/jvmchap1-1/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/syntax.css">
+    
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/docco.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">阿岑的部落</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/categories/study">study</a>
+                    </li>
+                    
+                    
+		    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/post-bg-coffee.jpeg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/java" title="Java">
+                            Java
+                        </a>
+                        
+                        <a class="tag" href="/tags/jvm" title="JVM">
+                            JVM
+                        </a>
+                        
+                    </div>
+                    <h1>JVM第一章知识点总结(2)</h1>
+                    <h2 class="subheading">HotSpot虚拟机对象探秘</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                 &#34;ACen&#34;
+                         
+                        on 
+                        Saturday, November 2, 2019
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#hotspot虚拟机对象探秘-2个链接没做">HotSpot虚拟机对象探秘(2个链接没做)</a>
+<ul>
+<li><a href="#对象的创建">对象的创建</a></li>
+<li><a href="#对象的内存布局">对象的内存布局</a></li>
+<li><a href="#对象的访问定位">对象的访问定位</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<h1 id="hotspot虚拟机对象探秘-2个链接没做">HotSpot虚拟机对象探秘(2个链接没做)</h1>
+
+<p><br></p>
+
+<h2 id="对象的创建">对象的创建</h2>
+
+<p><img src="/img/nccj.jpg" alt="" /></p>
+
+<ul>
+<li><p><strong><font color=#36648B >检查指令</font></strong></p>
+
+<p>&amp;描述：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;虚拟机遇到一条new指令时，首先将去检查指令是否能在常量池中定位到一个类符号的引用，同时检查这个符号引用代表的类是否已经被加载、解析和初始化过。如果没有的话，那必须先进行相应的<strong>类加载过程</strong>(详情可查看&hellip;)。</p>
+
+<p><br></p></li>
+
+<li><p><strong><font color=#36648B >分配内存</font></strong></p>
+
+<p>&amp;描述：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;在类加载完成之后，对象所需的内存大小便可完全确定。此时要进行内存分配，主要通过两种方式，选择哪种方式由Java堆是否完整决定，而Java堆是否完整又由所采用的垃圾收集器(详情可查看)是否带有压缩整理功能决定：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1、指针碰撞(Bump the Pointer)</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;假设Java堆中的内存是<strong>绝对完整</strong>的，所有用过的内存放一边，空闲的内存放一边，中间放着一个指针作为分界点的指示器，那么分配内存就是仅仅把那个指针向空闲的空间那边挪动一段对象大小相等的距离。<u>在使用Serial、ParNew等带复制算法的收集器采用</u>。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1、空闲列表(Free List)</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;如果Java堆中的内存并<strong>不是规整对</strong>的，已使用的内存和空间相互交错，虚拟机会将可以用的内存维护到一个列表上，在分配内存时从这个列表中找到一块足够大的空间划给对象。然后更新列表记录。<u>使用CMS这种基于标记-清理(Mark-Sweep)算法的收集器时采用</u>。</p>
+
+<p><br></p></li>
+
+<li><p><strong><font color=#36648B >防止并发</font></strong></p>
+
+<p>&amp;描述：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;分配完内存之后，还需要考虑对象创建在虚拟机中是否频繁，用来防止并发，通常也有两种方案：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1、堆分配内存空间的动作进行同步处理，实际上JVM采用CAS(Cmpare And Set)配上失败重试的方式保证更新操作的原子性；</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;2、把内存分配的动作按照线程划分在不同的空间之中进行，即为每个线程在java堆中预先分配一块小内存，称为<strong>本地线程分配缓冲区（Thread Local Allocation Buffer,TLAB）</strong>。分配内存时在线程的TLBA上分配，只有TLAB用完并分配新的TLAB时，才需要同步锁定。JVM是否使用TLAB可以通过-XX:+UseTLAB参数来设定。</p>
+
+<p><br></p></li>
+
+<li><p><strong><font color=#36648B >初始化零值</font></strong></p>
+
+<p>&amp;描述：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;内存分配完成之后，虚拟机需要将分配到的内存空间都初始化为零值(不包括对象头)。<u>这一步骤保证了对象的实例字段在Java代码中可以不赋初值就直接使用，程序能访问到<strong>字段数据类型所对应的零值</strong>。</u></p>
+
+<p><br></p></li>
+
+<li><p><strong><font color=#36648B >对象设置</font></strong></p>
+
+<p>&amp;描述：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;接下来，虚拟机要对对象进行必要的设置。将这个<strong>对象是哪个类的实例</strong>、<strong>如何才能到类的元数据信息</strong>、<strong>对象的哈希码</strong>、<strong>对象的GC分代年龄</strong>等信息存入对象的对象头中。</p>
+
+<p><br></p></li>
+
+<li><p><strong><font color=#36648B >执行&lt; init &gt;方法</font></strong></p>
+
+<p>&amp;描述：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;设置完对象头后，从JVM的角度来看一个对象已经完成了，但是从java程序的角度来看还没有创建完成呢。此时就需要执行init方法，调用构造方法等过程，这样一个真正可用的对象才算完全的产生出来。</p>
+
+<p><br></p></li>
+</ul>
+
+<h2 id="对象的内存布局">对象的内存布局</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;对象在堆内存中的布局可分为三部分：<strong>对象头（Header）</strong>，<strong>实例数据(Instance Data)</strong>，<strong>对齐填充(Padding)</strong>。</p>
+
+<ul>
+<li><p><strong><font color=#36648B >对象头</font></strong> ：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;对象头包含两部分，第一部分<strong>存储自身运行时数据</strong>，如哈希码，GC分代年龄、锁状态标志、线程持有锁、偏向线程ID、偏向时间戳等，官方称为“Mark Word”。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;第二部分是<strong>类型指针</strong>，即对象指向它的类元数据的指针，通过此指针来确定是哪个类的对象。</p></li>
+
+<li><p><strong><font color=#36648B >实例数据</font></strong> :</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;存储对象中的各类型的字段内容。无论是从父类继承来的还是在子类中定义的。</p></li>
+
+<li><p><strong><font color=#36648B >对齐填充</font></strong>：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;并不是必然存在的，当对象实例数据部分没有对齐时，进行对齐补全。</p></li>
+</ul>
+
+<p><br></p>
+
+<h2 id="对象的访问定位">对象的访问定位</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;Java程序需要通过栈上的reference数据来操作堆上的具体对象。reference数据只是一个指向对象的引用，具体的对象访问根据不同虚拟机有不同的实现，主流的访问方式有两种：<strong>使用句柄</strong>和<strong>直接指针</strong>。</p>
+
+<ul>
+<li><p><strong><font color=#36648B >使用句柄</font></strong> ：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;如果通过句柄来访问对象，Java堆中会划出一块内存作为句柄池，reference中存储句柄地址，而句柄中包含对象的实例数据与类型数据各自的地址。这样就能访问到对象了。</p>
+
+<p><img src="/img/jub.jpg" alt="" /></p></li>
+
+<li><p><strong><font color=#36648B >直接指针</font></strong> ：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;直接指针，就是指reference中直接存储对象的地址。但是Java堆对象的布局中就必须考虑如何防止访问类型数据相关信息。</p>
+
+<p><img src="/img/zjzz.jpg" alt="" /></p></li>
+</ul>
+
+<p>&ensp;&ensp;&ensp;&ensp;这两种对象访问方式，各有优势，但是HotSpot使用的是指针对象访问，但是句柄访问对象在整个软件开发范围中也是十分常见的。</p>
+
+<p><br/></p>
+
+<p>内容主要参考来源：《深入理解Java虚拟机》第二版——周志明</p>
+
+<p>图片来源：网络</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/jvmchap1/" data-toggle="tooltip" data-placement="top" title="JVM第一章知识点总结(1)">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="阿岑的部落" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:645207604@qq.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/img/weChat.jpg">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/ACen6XD">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; 阿岑的部落 2019
+                    <br>
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>
