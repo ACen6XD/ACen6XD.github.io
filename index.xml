@@ -6,24 +6,42 @@
     <description>Recent content on 阿岑的部落</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 02 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 14 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ACen6XD.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>JVM第一章知识点总结(2)</title>
+      <title>垃圾收集算法以及在HotSpot上的实现</title>
+      <link>https://ACen6XD.github.io/post/jvmchap2-1/</link>
+      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ACen6XD.github.io/post/jvmchap2-1/</guid>
+      <description>垃圾收集算法 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;简单介绍几种算法的思想以及其发展过程。 标记-清除算法(Mark-Sweep) 概述</description>
+    </item>
+    
+    <item>
+      <title>对象已死吗？</title>
+      <link>https://ACen6XD.github.io/post/jvmchap2/</link>
+      <pubDate>Sun, 13 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ACen6XD.github.io/post/jvmchap2/</guid>
+      <description>对象已死吗？ &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;在堆里面存放着Java世界中几乎所有的对象实例，垃圾收集器在对堆进行回收前，第一</description>
+    </item>
+    
+    <item>
+      <title>HotSpot虚拟机对象探秘</title>
       <link>https://ACen6XD.github.io/post/jvmchap1-1/</link>
-      <pubDate>Sat, 02 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>https://ACen6XD.github.io/post/jvmchap1-1/</guid>
       <description>HotSpot虚拟机对象探秘(2个链接没做) 对象的创建 检查指令 &amp;amp;描述： &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;虚拟机遇到一条</description>
     </item>
     
     <item>
-      <title>JVM第一章知识点总结(1)</title>
+      <title>Java内存区域与内存溢出异常</title>
       <link>https://ACen6XD.github.io/post/jvmchap1/</link>
-      <pubDate>Fri, 01 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 11 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>https://ACen6XD.github.io/post/jvmchap1/</guid>
       <description>Java内存区域与内存溢出异常(两个链接没做) 运行时数据区域 程序计数器(Program Counter Register) &amp;amp;概念： &amp;ensp;&amp;ensp;&amp;ensp</description>
