@@ -213,11 +213,11 @@
 <li><a href="#垃圾收集算法">垃圾收集算法</a>
 <ul>
 <li><a href="#标记-清除算法-mark-sweep">标记-清除算法(Mark-Sweep)</a></li>
-<li><a href="#可达性分析算法-gc-roots-tracing">可达性分析算法(GC Roots Tracing)</a></li>
-<li><a href="#再谈引用">再谈引用</a></li>
-<li><a href="#标记算法">标记算法</a></li>
-<li><a href="#回收方法区">回收方法区</a></li>
+<li><a href="#复制算法-copying">复制算法(Copying)</a></li>
+<li><a href="#标记-整理算法-mark-compact">标记-整理算法(Mark-Compact)</a></li>
+<li><a href="#分代收集算法-generational-collection">分代收集算法(Generational Collection)</a></li>
 </ul></li>
+<li><a href="#hotspot的算法实现">HotSpot的算法实现</a></li>
 </ul>
 </nav>
                 
@@ -232,109 +232,103 @@
 <h2 id="标记-清除算法-mark-sweep">标记-清除算法(Mark-Sweep)</h2>
 
 <ul>
-<li><p><strong><font color=#36648B >概述</font></strong></p>
+<li><p><strong><font color=#36648B >思想</font></strong></p>
 
 <p>&ensp;&ensp;&ensp;&ensp;标记-清除算法分为两个阶段：<strong>标记阶段</strong>和<strong>清除阶段</strong>。标记阶段的任务是标记出所有需要被回收的对象,具体实现可参照上一章复习中的<a href="https://acen6xd.github.io/post/jvmchap2/" title="标记算法">标记算法</a>，清除阶段就是回收被标记的对象所占用的空间。</p></li>
 
-<li><p><strong><font color=#36648B >特点</font></strong></p>
+<li><p><strong><font color=#36648B >步骤</font></strong></p>
 
-<p>&ensp;&ensp;&ensp;&ensp;这种算法的特点是实现简单，判定效率也很高，但是Java虚拟机中却没有使用这种算法，主要原因是<u>这种算法很难解决对象之间相互循环引用的问题</u>。</p>
+<p>&ensp;&ensp;&ensp;&ensp;标记-清除算法采用从根集合（GC Roots）进行扫描，对存活的对象进行标记，标记完毕后，再扫描整个空间中未被标记的对象，进行回收，如下图所示。标记-清除算法不需要进行对象的移动，只需对不存活的对象进行处理，在存活对象比较多的情况下极为高效，但由于标记-清除算法直接回收不存活的对象，因此会造成内存碎片。</p>
 
-<p><br></p></li>
-</ul>
+<p><img src="/img/ms.jpg" alt="" /></p></li>
 
-<h2 id="可达性分析算法-gc-roots-tracing">可达性分析算法(GC Roots Tracing)</h2>
+<li><p><strong><font color=#36648B >总述</font></strong></p>
 
-<ul>
-<li><p><strong><font color=#36648B >概述</font></strong></p>
-
-<p>&ensp;&ensp;&ensp;&ensp;算法的基本思想就是通过一系列被称为<strong>GC Roots</strong>的对象作为起点，从这些起点向下搜索，搜索所走过的路径称为引用链(Reference Chain)，当一个对象到GC Roots没有任何引用链相连时，则证明此对象不可达。</p>
-
-<p><img src="/img/rootsTracing.jpg" alt="" /></p></li>
-
-<li><p><strong><font color=#36648B >可作为GC Roots的对象</font></strong></p>
-
-<p>&ensp;&ensp;&ensp;&ensp;虚拟机栈(栈帧中的本地变量表)中引用的对象。</p>
-
-<p>&ensp;&ensp;&ensp;&ensp;方法区中类静态属性引用的对象</p>
-
-<p>&ensp;&ensp;&ensp;&ensp;方法区中常量引用的对象</p>
-
-<p>&ensp;&ensp;&ensp;&ensp;本地方法栈中JNI(即一般说的Native方法)引用的对象</p>
+<p>主要不足有两个：一个是<strong>效率问题</strong>，标记和清除两个步骤效率都不高；另一个是<strong>空间问题</strong>，标记清除后会产生大量不连续的内存碎片。空间碎片太多会导致不必要的minor GC。</p>
 
 <p><br></p></li>
 </ul>
 
-<h2 id="再谈引用">再谈引用</h2>
+<h2 id="复制算法-copying">复制算法(Copying)</h2>
 
 <ul>
-<li><p><strong><font color=#36648B >概述</font></strong></p>
+<li><p><strong><font color=#36648B >思想</font></strong></p>
 
-<p>&ensp;&ensp;&ensp;&ensp;在JDK1.2之前，引用的定义是：如果reference类型的数据中存储的数值代表的是另一块内存的起始地址，就称这块内存代表着一个引用。这种定义太狭隘，我们希望描述这样一组对象：当内存够用时，保留在内存中；如果内存空间在进行垃圾收集后还是很紧张，则抛弃这些对象。因此便产生不同程度的引用。</p></li>
+<p>&ensp;&ensp;&ensp;&ensp;为了解决Mark-Sweep算法的缺陷，Copying算法就被提了出来。它将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这一块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用的内存空间一次清理掉，这样一来就不容易出现内存碎片的问题。</p></li>
 
-<li><p><strong><font color=#36648B >引用的分类</font></strong></p>
+<li><p><strong><font color=#36648B >步骤</font></strong></p>
 
-<p>&ensp;&ensp;&ensp;&ensp;引用分为四种：强引用，软引用，弱引用，虚引用，强度逐渐减弱。</p>
+<p>&ensp;&ensp;&ensp;&ensp;复制算法的提出是为了克服句柄的开销和解决内存碎片的问题。它开始时把堆分成 一个对象 面和多个空闲面， 程序从对象面为对象分配空间，当对象满了，基于copying算法的垃圾 收集就从根集合（GC Roots）中扫描活动对象，并将每个 活动对象复制到空闲面(使得活动对象所占的内存之间没有空闲洞)，这样空闲面变成了对象面，原来的对象面变成了空闲面，程序会在新的对象面中分配内存。</p>
 
-<p>&ensp;&ensp;&ensp;&ensp;1. <strong>强引用</strong>就是程序代码中普遍存在的引用,类似Object obj = new Object()。只要引用在，垃圾收集器永远不会回收。</p>
+<p><img src="/img/copy.jpg" alt="" /></p></li>
 
-<p>&ensp;&ensp;&ensp;&ensp;2. <strong>软引用</strong>是用来描述一些还有用但并非必须的对象。</p>
+<li><p><strong><font color=#36648B >总述</font></strong></p>
 
-<p>&ensp;&ensp;&ensp;&ensp;3. <strong>弱引用</strong>也是用来描述非必需对象的，被弱引用关联的对象只能生存到下一次垃圾收集发生之前。</p>
+<p>&ensp;&ensp;&ensp;&ensp;这种算法虽然实现简单，运行高效且不容易产生内存碎片，但是却对内存空间的使用做出了高昂的代价，因为能够使用的内存缩减到原来的一半。</p>
 
-<p>&ensp;&ensp;&ensp;&ensp;4. <strong>虚引用</strong>又被称为幽灵引用或者幻影引用。</p>
+<p>&ensp;&ensp;&ensp;&ensp;同时，Copying算法的效率跟存活对象的数目多少有很大的关系，如果存活对象很多，那么Copying算法的效率将会大大降低。</p>
 
 <p><br></p></li>
 </ul>
 
-<h2 id="标记算法">标记算法</h2>
+<h2 id="标记-整理算法-mark-compact">标记-整理算法(Mark-Compact)</h2>
 
 <ul>
-<li><p><strong><font color=#36648B >概述</font></strong></p>
+<li><p><strong><font color=#36648B >思想</font></strong></p>
 
-<p>&ensp;&ensp;&ensp;&ensp;在可达性分析算法中不可达的对象，并非就是已经死亡的对象。他们都只是暂时处于&rdquo;缓刑&rdquo;阶段，要真正宣告一个对象死亡，至少要经过两次标记过程。</p></li>
+<p>&ensp;&ensp;&ensp;&ensp;该算法标记阶段和Mark-Sweep一样，<font color=red >但是在完成标记之后，它不是直接清理可回收对象，而是将存活对象都向一端移动(<strong>记住是完成标记之后，先不清理，先移动再清理回收对象</strong>)，</font>然后清理掉端边界以外的内存。   </p></li>
 
-<li><p><strong><font color=#36648B >具体实现</font></strong></p>
+<li><p><strong><font color=#36648B >步骤</font></strong></p>
 
-<p>&ensp;&ensp;&ensp;&ensp;<strong>第一次标记</strong>：</p>
+<p>&ensp;&ensp;&ensp;&ensp;标记-整理算法采用标记-清除算法一样的方式进行对象的标记，但在清除时不同，在回收不存活的对象占用的空间后，会将所有的存活对象往左端空闲空间移动，并更新对应的指针。<strong><font color=red >标记-整理算法是在标记-清除算法的基础上，又进行了对象的移动</font></strong>，因此成本更高，但是却解决了内存碎片的问题。</p>
 
-<p>&ensp;&ensp;&ensp;&ensp;如果在进行可达性分析以后发现没有与GC Roots相连接的引用链，那它将会被第一次标记并且进行一次筛选，条件是此对象是否有必要执行finalize()方法。当对象没有覆盖finalize()方法，或者finalize()方法以及被虚拟机调用过，虚拟机将这两种情况都视为“没有必要执行”。如果有必要执行，这个对象会被放在一个F_Queue的队列中，并在稍后由一个虚拟机自动建立的、低优先级的Finalizer线程去执行finalize()方法，但不承诺会等它执行结束。</p>
-
-<p>&ensp;&ensp;&ensp;&ensp;<strong>第二次标记</strong>：</p>
-
-<p>&ensp;&ensp;&ensp;&ensp;稍后GC会对F_Queue队列中的对象进行第二次小规模标记，如果这时候这个对象重新与引用链上的任何一个对象建立关联，就会被移除“即将回收的”的集合；如果这个时候还没有逃脱那基本上就被回收了。</p>
-
-<p><img src="/img/bjsf.jpg" alt="" /></p>
-
-<p>&ensp;&ensp;&ensp;&ensp;<strong>任何一个对象的finalize()方法都只会被系统自动调用一次</strong>。</p>
+<p><img src="/img/mc.jpg" alt="" /></p>
 
 <p><br></p></li>
 </ul>
 
-<h2 id="回收方法区">回收方法区</h2>
+<h2 id="分代收集算法-generational-collection">分代收集算法(Generational Collection)</h2>
 
 <ul>
-<li><p><strong><font color=#36648B >概述</font></strong></p>
+<li><p><strong><font color=#36648B >思想</font></strong></p>
 
-<p>&ensp;&ensp;&ensp;&ensp;java虚拟机规范中不要求虚拟机在方法区实现垃圾收集，而且在方法区回收效率很低。</p></li>
+<p>&ensp;&ensp;&ensp;&ensp;就是根据对象存货周期的不同将内存划分为几块。一般将java堆分为<strong>新生代</strong>和<strong>老年代</strong>，根据各个年代的特点采取最适当的收集算法。   </p></li>
 
-<li><p><strong><font color=#36648B >主要垃圾</font></strong></p>
+<li><p><strong><font color=#36648B >步骤</font></strong></p>
 
-<p>&ensp;&ensp;&ensp;&ensp;<strong>废弃常量</strong>：</p>
+<p>&ensp;&ensp;&ensp;&ensp;在新生代，每次垃圾收集时都会有<u>大批对象死去，只有少量存活</u>，那么就选用<strong>复制算法</strong>，也就是只要付出少量存活对象的复制成本就可以完成收集。而老年代中因为对象的<u>存活率高、没有额外空间进行担保</u>，就必须用<strong>标记清理</strong>或<strong>标记整理</strong>算法来进行回收。</p>
 
-<p>&ensp;&ensp;&ensp;&ensp;判定一个常量比较简单（一个常量任何地方都没有被引用了，就可以认为是废弃常量了）。</p>
+<p><br></p></li>
+</ul>
 
-<p>&ensp;&ensp;&ensp;&ensp;<strong>无用的类</strong>：</p>
+<h1 id="hotspot的算法实现">HotSpot的算法实现</h1>
 
-<p>&ensp;&ensp;&ensp;&ensp;判定一个类是否是无用类，就相对比较苛刻，需要满足以下三个条件，才能被认定为是一个无用的类。</p>
+<p>&ensp;&ensp;&ensp;&ensp;在HotSpot虚拟机上运行实现这些算法时，必须对算法的执行效率有着严格的考量，才能保证虚拟机高效运行。</p>
 
-<p>&ensp;&ensp;&ensp;&ensp;1、该类所有的实例都已经被回收。</p>
+<ul>
+<li><p><strong><font color=#36648B >枚举根节点</font></strong></p>
 
-<p>&ensp;&ensp;&ensp;&ensp;2、加载该类的ClassLoader已经被回收。</p>
+<p>&ensp;&ensp;&ensp;&ensp;由于逐个检查GC Roots节点是否有引用链，会消耗很多时间。同时在进行GC时，会停顿所有的Java执行线程(&ldquo;Stop The World&rdquo;)，因为不可以出现分析过程中对象应用关系还在不断变化的情况，否则准确性会无法保证，综上也就是说明了可达性分析对于时间的敏感。</p>
 
-<p>&ensp;&ensp;&ensp;&ensp;3、该类对应的java.lang.Class对象没有在任何地方被引用，无法再任何地方通过反射访问该类的方法。</p>
+<p>&ensp;&ensp;&ensp;&ensp;所以在HotSpot的实现中，使用了一组<strong>OopMap(Ordinary Object Pointer Map)</strong>的数据结构来直接知道哪些地方存在着引用。在类加载完成的时候，HotSpot就把对象什么偏移量上是什么数据计算出来，在JIT编译过程中，也会在<strong>特定位置</strong>记录下栈和寄存器中哪些位置是引用。以便于GC在扫描时可以直接得到这些信息。</p></li>
 
-<p>&ensp;&ensp;&ensp;&ensp;<strong>在大量使用反射、动态代理、Cglib等ByteCode框架、动态生成JSP以及OSGi这类频繁自定义ClassLoader的场景，都是需要进行无用类回收的</strong>。</p></li>
+<li><p><strong><font color=#36648B >安全点</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;在OopMap的协助下，HotSpot可以快速准确的找到GC Root枚举。但如果为每一条指令都生成OopMap，会需要大量的额外空间。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;实际上，HotSpot只是在前文说的特定位置记录这些信息，这些位置就成为&rdquo;<strong>安全点</strong>&ldquo;。程序只有在达到安全点的时候才能暂停开始CG。安全点的选定以&rdquo;是否具有让程序长时间执行的特征&rdquo;为标准而选定。&rdquo;长时间执行&rdquo;最明显特征就是指令序列复用，例如<strong>方法调用</strong>、<strong>循环跳转</strong>、<strong>异常跳转</strong>等。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;有两种方案供程序在GC执行时让线程跑到最近的安全点上停下来：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1、<strong>抢先式中断(Preemptive Suspension)</strong>:不需要线程的执行代码主动配合，GC发生时，把所有线程中断，发现有线程终端的地方不在安全点上，就恢复线程使他到安全点。<strong>现在几乎没有虚拟机采用抢先式中断</strong>。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;2、<strong>主动式中断(Voluntary Suspension)</strong>:不直接对线程进行操作，仅仅对线程设置一个标志，各个线程执行的时候主动去轮询这个标志，发现中断标志为真时候就中断挂起。轮询标志的地方和安全点重合。</p></li>
+
+<li><p><strong><font color=#36648B >安全区域(Safe Region)</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;安全区域是指在一段代码中，引用关系不会发生变化。在这个区域中任何的地方开始GC都是安全的，也就是扩展的Safe Point。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;如果线程要离开安全区域时，他要检查系统是否完成了根节点枚举(或是整个GC过程),如果完成，线程继续执行。否则必须等到收到可以安全离开Safe Region的信号为止。</p></li>
 </ul>
 
 <p><br/></p>
