@@ -6,10 +6,19 @@
     <description>Recent content on 阿岑的部落</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 14 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 15 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ACen6XD.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>垃圾收集器</title>
+      <link>https://ACen6XD.github.io/post/jvmchap2-2/</link>
+      <pubDate>Tue, 15 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ACen6XD.github.io/post/jvmchap2-2/</guid>
+      <description>垃圾收集器 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;如果说收集方法是内存回收的方法论，那么垃圾收集器就是内存回收的具体实现。 新生代 Se</description>
+    </item>
     
     <item>
       <title>垃圾收集算法以及在HotSpot上的实现</title>
@@ -45,6 +54,15 @@
       
       <guid>https://ACen6XD.github.io/post/jvmchap1/</guid>
       <description>Java内存区域与内存溢出异常(两个链接没做) 运行时数据区域 程序计数器(Program Counter Register) &amp;amp;概念： &amp;ensp;&amp;ensp;&amp;ensp</description>
+    </item>
+    
+    <item>
+      <title>An Example Post</title>
+      <link>https://ACen6XD.github.io/post/jvmchap2-3/</link>
+      <pubDate>Mon, 04 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://ACen6XD.github.io/post/jvmchap2-3/</guid>
+      <description></description>
     </item>
     
   </channel>
