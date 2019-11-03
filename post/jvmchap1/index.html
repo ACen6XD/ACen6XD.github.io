@@ -108,10 +108,6 @@
                         <a href="/categories/study">study</a>
                     </li>
                     
-                    <li>
-                        <a href="/categories/tech">tech</a>
-                    </li>
-                    
                     
 		    
 
@@ -214,7 +210,7 @@
                 </header>
                 <nav id="TableOfContents">
 <ul>
-<li><a href="#java内存区域与内存溢出异常-两个链接没做">Java内存区域与内存溢出异常(两个链接没做)</a>
+<li><a href="#java内存区域与内存溢出异常">Java内存区域与内存溢出异常</a>
 <ul>
 <li><a href="#运行时数据区域">运行时数据区域</a>
 <ul>
@@ -232,7 +228,7 @@
                 
                 
 
-<h1 id="java内存区域与内存溢出异常-两个链接没做">Java内存区域与内存溢出异常(两个链接没做)</h1>
+<h1 id="java内存区域与内存溢出异常">Java内存区域与内存溢出异常</h1>
 
 <p><br></p>
 
@@ -301,7 +297,7 @@
 
 <p>&amp;概念：</p>
 
-<p>&ensp;&ensp;&ensp;&ensp;Java虚拟机管理中内存最大的一块，在虚拟机启动时创建。此区域的唯一目的就是存放对象实例，同时也是垃圾收集器管理的主要区域。其中可以细分为<strong>新生代(Young Generation)</strong>和<strong>老年代(Old Generation)</strong>。从内存分配角度来看，线程共享的Java堆中可能划分出多个线程私有的分配缓冲区(Thraed Local Allocation Buffer,TLAB)。具体的细节可以点击查看。</p>
+<p>&ensp;&ensp;&ensp;&ensp;Java虚拟机管理中内存最大的一块，在虚拟机启动时创建。此区域的唯一目的就是存放对象实例，同时也是垃圾收集器管理的主要区域。其中可以细分为<strong>新生代(Young Generation)</strong>和<strong>老年代(Old Generation)</strong>，新生代中又可以细分为Eden区和两个Survivor区域，HotSpot虚拟机默认的比例是8：1：1。从内存分配角度来看，线程共享的Java堆中可能划分出多个线程私有的分配缓冲区(Thraed Local Allocation Buffer,TLAB)。</p>
 
 <p>&amp;特征：</p>
 
@@ -380,11 +376,6 @@
                 <hr>
                 <ul class="pager">
                     
-                    <li class="previous">
-                        <a href="/post/jvmchap2-3/" data-toggle="tooltip" data-placement="top" title="An Example Post">&larr;
-                            Previous Post</a>
-                    </li>
-                    
                     
                     <li class="next">
                         <a href="/post/jvmchap1-1/" data-toggle="tooltip" data-placement="top" title="HotSpot虚拟机对象探秘">Next
@@ -423,10 +414,6 @@
                         <a href="/tags/jvm" title="jvm">
                             jvm
                         </a>
-                        
-                        
-                        
-                        
                         
                         
                     </div>

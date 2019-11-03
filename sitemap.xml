@@ -4,41 +4,46 @@
   
   <url>
     <loc>https://ACen6XD.github.io/categories/</loc>
-    <lastmod>2019-10-15T00:00:00+00:00</lastmod>
+    <lastmod>2019-10-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ACen6XD.github.io/tags/java/</loc>
-    <lastmod>2019-10-15T00:00:00+00:00</lastmod>
+    <lastmod>2019-10-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ACen6XD.github.io/tags/jvm/</loc>
-    <lastmod>2019-10-15T00:00:00+00:00</lastmod>
+    <lastmod>2019-10-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ACen6XD.github.io/post/</loc>
-    <lastmod>2019-10-15T00:00:00+00:00</lastmod>
+    <lastmod>2019-10-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ACen6XD.github.io/categories/study/</loc>
-    <lastmod>2019-10-15T00:00:00+00:00</lastmod>
+    <lastmod>2019-10-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ACen6XD.github.io/tags/</loc>
-    <lastmod>2019-10-15T00:00:00+00:00</lastmod>
+    <lastmod>2019-10-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://ACen6XD.github.io/post/jvmchap2-2/</loc>
-    <lastmod>2019-10-15T00:00:00+00:00</lastmod>
+    <loc>https://ACen6XD.github.io/post/jvmchap2-3/</loc>
+    <lastmod>2019-10-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://ACen6XD.github.io/</loc>
+    <lastmod>2019-10-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ACen6XD.github.io/post/jvmchap2-2/</loc>
     <lastmod>2019-10-15T00:00:00+00:00</lastmod>
   </url>
   
@@ -60,26 +65,6 @@
   <url>
     <loc>https://ACen6XD.github.io/post/jvmchap1/</loc>
     <lastmod>2019-10-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ACen6XD.github.io/post/jvmchap2-3/</loc>
-    <lastmod>2018-06-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ACen6XD.github.io/tags/tag1/</loc>
-    <lastmod>2018-06-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ACen6XD.github.io/tags/tag2/</loc>
-    <lastmod>2018-06-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ACen6XD.github.io/categories/tech/</loc>
-    <lastmod>2018-06-04T00:00:00+00:00</lastmod>
   </url>
   
 </urlset>

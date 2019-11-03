@@ -15,15 +15,15 @@
     
 
     
-    <meta name="title" content="An Example Post" />
-    <meta property="og:title" content="An Example Post" />
-    <meta property="twitter:title" content="An Example Post" />
+    <meta name="title" content="内存分配与回收策略" />
+    <meta property="og:title" content="内存分配与回收策略" />
+    <meta property="twitter:title" content="内存分配与回收策略" />
     
 
     
-    <meta name="description" content="阿岑的个人博客">
-    <meta property="og:description" content="阿岑的个人博客" />
-    <meta property="twitter:description" content="阿岑的个人博客" />
+    <meta name="description" content="复习内存的分配以及回收的策略">
+    <meta property="og:description" content="复习内存的分配以及回收的策略" />
+    <meta property="twitter:description" content="复习内存的分配以及回收的策略" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="Java,博客, 个人网站">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>An Example Post- ACen Blog</title>
+    <title>内存分配与回收策略- ACen Blog</title>
 
     <link rel="canonical" href="/post/jvmchap2-3/">
 
@@ -108,10 +108,6 @@
                         <a href="/categories/study">study</a>
                     </li>
                     
-                    <li>
-                        <a href="/categories/tech">tech</a>
-                    </li>
-                    
                     
 		    
 
@@ -157,7 +153,7 @@
 
 <style type="text/css">
     header.intro-header {
-        background-image: url('/img/tag-bg.jpg')
+        background-image: url('/img/post-bg-coffee.jpeg')
     }
 </style>
 <header class="intro-header">
@@ -167,24 +163,24 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/tag1" title="tag1">
-                            tag1
+                        <a class="tag" href="/tags/java" title="Java">
+                            Java
                         </a>
                         
-                        <a class="tag" href="/tags/tag2" title="tag2">
-                            tag2
+                        <a class="tag" href="/tags/jvm" title="JVM">
+                            JVM
                         </a>
                         
                     </div>
-                    <h1>An Example Post</h1>
-                    <h2 class="subheading"></h2>
+                    <h1>内存分配与回收策略</h1>
+                    <h2 class="subheading">JVM第二章知识点总结part4</h2>
                     <span class="meta">
                         Posted by 
                         
-                                 &#34;&#34;
+                                 &#34;ACen&#34;
                          
                         on 
-                        Monday, June 4, 2018
+                        Wednesday, October 16, 2019
                         
                         
                         
@@ -212,20 +208,95 @@
                 <header>
                     <h2>TOC</h2>
                 </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#内存分配与对象回收">内存分配与对象回收</a>
+<ul>
+<li><a href="#你需要知道的">你需要知道的</a></li>
+<li><a href="#对象优先在eden区分配">对象优先在Eden区分配</a></li>
+<li><a href="#大对象直接进入老年代">大对象直接进入老年代</a></li>
+<li><a href="#长期存活的对象将进入老年代">长期存活的对象将进入老年代</a></li>
+<li><a href="#动态对象年龄判定">动态对象年龄判定</a></li>
+<li><a href="#空间分配担保">空间分配担保</a></li>
+</ul></li>
+</ul>
+</nav>
                 
                 
-                
+
+<h1 id="内存分配与对象回收">内存分配与对象回收</h1>
+
+<p>&ensp;&ensp;&ensp;&ensp;Java技术体系中所提倡的自动内存管理最终可以归结于为了自动化的解决两个问题：<strong>给对象分配内存</strong>和<strong>回收分配给对象的内存</strong></p>
+
+<p><br></p>
+
+<h2 id="你需要知道的">你需要知道的</h2>
+
+<ul>
+<li><p><strong><font color=#36648B >新生代GC(Minor GC)</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;指发生在新生代的垃圾收集动作，因为这部分的Java对象都具有朝生夕灭的特性，所以Minor GC非常频繁，一般回收速度也很快。</p></li>
+
+<li><p><strong><font color=#36648B >老年代GC(Major GC/Full GC)</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;指发生在老年代的GC，出现了Major GC,经常会伴随着至少一次的Minor GC(非绝对的)。Major GC一般会比Minor GC慢10倍以上。Full GC是指新生代和老年代一起进行的GC。</p></li>
+</ul>
+
+<p><br/></p>
+
+<h2 id="对象优先在eden区分配">对象优先在Eden区分配</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;大多情况下,对象直接在新生代Eden区中分配。<strong>当Eden区没有足够空间的时候，虚拟机将发起一次Minor GC</strong>。经过GC后存活的对象无法进入Survivor空间时，则通过<strong>分配担保机制</strong>(详情见下文)进入老年代。</p>
+
+<p><br></p>
+
+<h2 id="大对象直接进入老年代">大对象直接进入老年代</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;需要大量连续内存的对象，比如很长的字符串以及数组，就直接进入老年代。虚拟机提供了-XX:PretenureSizeThreshold参数，令大于这个设置值的对象直接在老年代分配。<strong>这样做是为了避免Eden区以及两个Survivor区之间发生大量内存复制</strong>。</p>
+
+<p><br></p>
+
+<h2 id="长期存活的对象将进入老年代">长期存活的对象将进入老年代</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;对象在Eden出生并经过第一次Minor GC后仍然存在，并被Survivor容纳的话，将被移动到Survivor空间中，同时设置年龄为1。对象在Survivor区中每熬过一次Minor GC，年龄就增加1岁，当年龄增加到一定程度时(默认为15岁)，就会晋升到老年代中。这个阈值，可以通过参数-XX:MaxTenuringThreshold设置。</p>
+
+<p><br></p>
+
+<h2 id="动态对象年龄判定">动态对象年龄判定</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;虚拟机并不是永远的要求对象年龄到达MaxTenuringThreshold后才进入老年代。如果在Survivor空间中相同年龄所有对象大小的总和大于Survivor空间的一半，年龄大于或等于该年龄的对象就直接进入老年代，无须等到MaxTenuringThreshold中要求的年龄。</p>
+
+<p><br></p>
+
+<h2 id="空间分配担保">空间分配担保</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;1、在发生Minor GC之前，虚拟机首先会检查<strong>老年代最大可用连续空间是否大于新生代所有对象总和</strong>，如果成立，则Minor GC是可以确保安全的，也就会执行这次GC。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;2、如果1不成立，虚拟机查看<strong>HandlePromotionFailure设置值是否允许担保失败</strong>。如果不允许，则改为进行一次Full GC。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;3、如果2允许，则继续检查<strong>老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小</strong>。如果大于，将尝试进行一次Minor GC，这次GC是有<strong>风险</strong>的；如果小于，改为进行一次Full GC。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;风险：新生代在进行复制算法的时候，为了内存利用率，只使用其中一个Survivor空间作为轮转备份，所以当出现大量对象在Minor GC后仍然存活的情况，就需要老年代来进行分配担保，把Survivor无法容纳的对象直接进入老年代。老年代进行担保时，前提是老年代本身还有空间容纳这些对象的剩余空间，由于会有多少对象存活下来是无法明确知道的，因此只好取每一次回收晋升到老年代对象容量的平均大小作为经验值。与老年代的剩余空间进行比较，决定是否进行Full GC来让老年代腾出更多空间。</p>
+
+<p><br></p>
+
+<p><br/></p>
+
+<p>内容主要参考来源：《深入理解Java虚拟机》第二版——周志明</p>
+
+<p>图片来源：网络</p>
+
 
                 
 
                 <hr>
                 <ul class="pager">
                     
-                    
-                    <li class="next">
-                        <a href="/post/jvmchap1/" data-toggle="tooltip" data-placement="top" title="Java内存区域与内存溢出异常">Next
-                            Post &rarr;</a>
+                    <li class="previous">
+                        <a href="/post/jvmchap2-2/" data-toggle="tooltip" data-placement="top" title="垃圾收集器">&larr;
+                            Previous Post</a>
                     </li>
+                    
                     
                 </ul>
 
@@ -259,10 +330,6 @@
                         <a href="/tags/jvm" title="jvm">
                             jvm
                         </a>
-                        
-                        
-                        
-                        
                         
                         
                     </div>

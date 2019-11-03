@@ -6,10 +6,19 @@
     <description>Recent content on 阿岑的部落</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 15 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 16 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ACen6XD.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>内存分配与回收策略</title>
+      <link>https://ACen6XD.github.io/post/jvmchap2-3/</link>
+      <pubDate>Wed, 16 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ACen6XD.github.io/post/jvmchap2-3/</guid>
+      <description>内存分配与对象回收 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;Java技术体系中所提倡的自动内存管理最终可以归结于为了自动化的解决两个问</description>
+    </item>
     
     <item>
       <title>垃圾收集器</title>
@@ -44,7 +53,7 @@
       <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>https://ACen6XD.github.io/post/jvmchap1-1/</guid>
-      <description>HotSpot虚拟机对象探秘(2个链接没做) 对象的创建 检查指令 &amp;amp;描述： &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;虚拟机遇到一条</description>
+      <description>HotSpot虚拟机对象探秘 对象的创建 检查指令 &amp;amp;描述： &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;虚拟机遇到一条new指令时，首</description>
     </item>
     
     <item>
@@ -53,16 +62,7 @@
       <pubDate>Fri, 11 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>https://ACen6XD.github.io/post/jvmchap1/</guid>
-      <description>Java内存区域与内存溢出异常(两个链接没做) 运行时数据区域 程序计数器(Program Counter Register) &amp;amp;概念： &amp;ensp;&amp;ensp;&amp;ensp</description>
-    </item>
-    
-    <item>
-      <title>An Example Post</title>
-      <link>https://ACen6XD.github.io/post/jvmchap2-3/</link>
-      <pubDate>Mon, 04 Jun 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://ACen6XD.github.io/post/jvmchap2-3/</guid>
-      <description></description>
+      <description>Java内存区域与内存溢出异常 运行时数据区域 程序计数器(Program Counter Register) &amp;amp;概念： &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;该</description>
     </item>
     
   </channel>

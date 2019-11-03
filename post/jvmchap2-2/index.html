@@ -108,10 +108,6 @@
                         <a href="/categories/study">study</a>
                     </li>
                     
-                    <li>
-                        <a href="/categories/tech">tech</a>
-                    </li>
-                    
                     
 		    
 
@@ -229,6 +225,11 @@
 <li><a href="#cms收集器">CMS收集器</a></li>
 </ul></li>
 <li><a href="#g1收集器">G1收集器</a></li>
+<li><a href="#其他知识点">其他知识点</a>
+<ul>
+<li><a href="#并行与并发">并行与并发</a></li>
+<li><a href="#吞吐量">吞吐量</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -530,9 +531,28 @@
 
 <p>&ensp;&ensp;&ensp;&ensp;&rdquo;-XX:G1HeapRegionSize&rdquo;：设置每个Region大小，范围1MB到32MB；目标是在最小Java堆时可以拥有约2048个Region；</p>
 
-<p><br/>
-<br/></p></li>
+<p><br/></p></li>
 </ul>
+
+<h2 id="其他知识点">其他知识点</h2>
+
+<h3 id="并行与并发">并行与并发</h3>
+
+<ul>
+<li><p><strong><font color=#36648B >并行(Parallel)</font></strong></p>
+
+<p>指多条垃圾收集线程并行工作，但此时用户仍然处于等待状态</p></li>
+
+<li><p><strong><font color=#36648B >并发(Concurrent)</font></strong></p>
+
+<p>指用户线程和垃圾收集线程同时执行(可能会交替执行)，用户程序继续执行，而垃圾收集程序运行于另一个CPU上。</p></li>
+</ul>
+
+<h3 id="吞吐量">吞吐量</h3>
+
+<p>&ensp;&ensp;&ensp;&ensp;CPU用于运行用户代码的时间与CPU总消耗时间的比值，即吞吐量=<strong>运行用户代码的时间/(运行用户代码的时间+垃圾收集时间)</strong>。</p>
+
+<p><br/></p>
 
 <p>内容主要参考来源：《深入理解Java虚拟机》第二版——周志明</p>
 
@@ -549,6 +569,11 @@
                             Previous Post</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/post/jvmchap2-3/" data-toggle="tooltip" data-placement="top" title="内存分配与回收策略">Next
+                            Post &rarr;</a>
+                    </li>
                     
                 </ul>
 
@@ -582,10 +607,6 @@
                         <a href="/tags/jvm" title="jvm">
                             jvm
                         </a>
-                        
-                        
-                        
-                        
                         
                         
                     </div>
