@@ -246,11 +246,11 @@
 
 <p>&ensp;&ensp;&ensp;&ensp;1、指针碰撞(Bump the Pointer)</p>
 
-<p>&ensp;&ensp;&ensp;&ensp;假设Java堆中的内存是<strong>绝对完整</strong>的，所有用过的内存放一边，空闲的内存放一边，中间放着一个指针作为分界点的指示器，那么分配内存就是仅仅把那个指针向空闲的空间那边挪动一段对象大小相等的距离。在使用<a href="https://acen6xd.github.io/post/jvmchap2-2/" title="Serial收集器">Serial</a>、<a href="https://acen6xd.github.io/post/jvmchap2-2/" title="ParNew收集器">ParNew</a>等带<strong>复制算法</strong>的收集器采用。</p>
+<p>&ensp;&ensp;&ensp;&ensp;假设Java堆中的内存是<strong>绝对完整</strong>的，所有用过的内存放一边，空闲的内存放一边，中间放着一个指针作为分界点的指示器，那么分配内存就是仅仅把那个指针向空闲的空间那边挪动一段对象大小相等的距离。在使用<a href="https://acen6xd.github.io/post/jvmchap2-2/" title="serial收集器">Serial</a>、<a href="https://acen6xd.github.io/post/jvmchap2-2/" title="parnew收集器">ParNew</a>等带<strong>复制算法</strong>的收集器采用。</p>
 
 <p>&ensp;&ensp;&ensp;&ensp;1、空闲列表(Free List)</p>
 
-<p>&ensp;&ensp;&ensp;&ensp;如果Java堆中的内存并<strong>不是规整对</strong>的，已使用的内存和空间相互交错，虚拟机会将可以用的内存维护到一个列表上，在分配内存时从这个列表中找到一块足够大的空间划给对象。然后更新列表记录。使用<a href="https://acen6xd.github.io/post/jvmchap2-2/" title="CMS收集器">CMS</a>这种基于<strong>标记-清理(Mark-Sweep)算法</strong>的收集器时采用。</p>
+<p>&ensp;&ensp;&ensp;&ensp;如果Java堆中的内存并<strong>不是规整对</strong>的，已使用的内存和空间相互交错，虚拟机会将可以用的内存维护到一个列表上，在分配内存时从这个列表中找到一块足够大的空间划给对象。然后更新列表记录。使用<a href="https://acen6xd.github.io/post/jvmchap2-2/" title="cms收集器">CMS</a>这种基于<strong>标记-清理(Mark-Sweep)算法</strong>的收集器时采用。</p>
 
 <p><br></p></li>
 
