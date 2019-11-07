@@ -12,9 +12,18 @@
     
     
     <item>
+      <title>字节码简介</title>
+      <link>https://ACen6XD.github.io/post/jvmchap3-1/</link>
+      <pubDate>Thu, 07 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ACen6XD.github.io/post/jvmchap3-1/</guid>
+      <description>简述 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;Java 虚拟机的指令由一个字节长度的、代表着某种特定操作含义的数字（称为操作码，Opcode）以及跟随其后的零至多个代表此操作所需参数（称为操</description>
+    </item>
+    
+    <item>
       <title>Class类文件结构</title>
       <link>https://ACen6XD.github.io/post/jvmchap3/</link>
-      <pubDate>Thu, 07 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 06 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>https://ACen6XD.github.io/post/jvmchap3/</guid>
       <description>需要知道的 全限定名 把类全名中的&amp;rdquo;.&amp;ldquo;替换成&amp;rdquo;/&amp;ldquo;，为了避免产生混淆，一般会在最后加入一个&amp;r</description>
