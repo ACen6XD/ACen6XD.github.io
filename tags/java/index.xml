@@ -6,15 +6,24 @@
     <description>Recent content in Java on 阿岑的部落</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 16 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 07 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ACen6XD.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Class类文件结构</title>
+      <link>https://ACen6XD.github.io/post/jvmchap3/</link>
+      <pubDate>Thu, 07 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ACen6XD.github.io/post/jvmchap3/</guid>
+      <description>需要知道的 全限定名 把类全名中的&amp;rdquo;.&amp;ldquo;替换成&amp;rdquo;/&amp;ldquo;，为了避免产生混淆，一般会在最后加入一个&amp;r</description>
+    </item>
+    
+    <item>
       <title>内存分配与回收策略</title>
       <link>https://ACen6XD.github.io/post/jvmchap2-3/</link>
-      <pubDate>Wed, 16 Oct 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>https://ACen6XD.github.io/post/jvmchap2-3/</guid>
       <description>内存分配与对象回收 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;Java技术体系中所提倡的自动内存管理最终可以归结于为了自动化的解决两个问</description>
@@ -23,7 +32,7 @@
     <item>
       <title>垃圾收集器</title>
       <link>https://ACen6XD.github.io/post/jvmchap2-2/</link>
-      <pubDate>Tue, 15 Oct 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 02 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>https://ACen6XD.github.io/post/jvmchap2-2/</guid>
       <description>垃圾收集器 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;如果说收集方法是内存回收的方法论，那么垃圾收集器就是内存回收的具体实现。 新生代 Se</description>
@@ -32,7 +41,7 @@
     <item>
       <title>垃圾收集算法以及在HotSpot上的实现</title>
       <link>https://ACen6XD.github.io/post/jvmchap2-1/</link>
-      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>https://ACen6XD.github.io/post/jvmchap2-1/</guid>
       <description>垃圾收集算法 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;简单介绍几种算法的思想以及其发展过程。 标记-清除算法(Mark-Sweep) 思想</description>
@@ -41,7 +50,7 @@
     <item>
       <title>对象已死吗？</title>
       <link>https://ACen6XD.github.io/post/jvmchap2/</link>
-      <pubDate>Sun, 13 Oct 2019 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 30 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>https://ACen6XD.github.io/post/jvmchap2/</guid>
       <description>对象已死吗？ &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;在堆里面存放着Java世界中几乎所有的对象实例，垃圾收集器在对堆进行回收前，第一</description>
@@ -50,7 +59,7 @@
     <item>
       <title>HotSpot虚拟机对象探秘</title>
       <link>https://ACen6XD.github.io/post/jvmchap1-1/</link>
-      <pubDate>Sat, 12 Oct 2019 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 16 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>https://ACen6XD.github.io/post/jvmchap1-1/</guid>
       <description>HotSpot虚拟机对象探秘 对象的创建 检查指令 &amp;amp;描述： &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;虚拟机遇到一条new指令时，首</description>
@@ -59,7 +68,7 @@
     <item>
       <title>Java内存区域与内存溢出异常</title>
       <link>https://ACen6XD.github.io/post/jvmchap1/</link>
-      <pubDate>Fri, 11 Oct 2019 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 15 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>https://ACen6XD.github.io/post/jvmchap1/</guid>
       <description>Java内存区域与内存溢出异常 运行时数据区域 程序计数器(Program Counter Register) &amp;amp;概念： &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;该</description>

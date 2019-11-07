@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="阿岑的部落">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://ACen6XD.github.io//img/tag-bg.jpg">
+    <meta property="twitter:image" content="https://ACen6XD.github.io//img/tag-bg.jpg" />
+    
+
+    
+    <meta name="title" content="Class类文件结构" />
+    <meta property="og:title" content="Class类文件结构" />
+    <meta property="twitter:title" content="Class类文件结构" />
+    
+
+    
+    <meta name="description" content="复习Class文件的数据结构">
+    <meta property="og:description" content="复习Class文件的数据结构" />
+    <meta property="twitter:description" content="复习Class文件的数据结构" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Java,博客, 个人网站">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Class类文件结构- ACen Blog</title>
+
+    <link rel="canonical" href="/post/jvmchap3/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/syntax.css">
+    
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/docco.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">阿岑的部落</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/categories/study">study</a>
+                    </li>
+                    
+                    
+		    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/post-bg-coffee.jpeg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/java" title="Java">
+                            Java
+                        </a>
+                        
+                        <a class="tag" href="/tags/jvm" title="JVM">
+                            JVM
+                        </a>
+                        
+                    </div>
+                    <h1>Class类文件结构</h1>
+                    <h2 class="subheading">JVM第三章知识点总结part1</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                 &#34;ACen&#34;
+                         
+                        on 
+                        Thursday, November 7, 2019
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#需要知道的">需要知道的</a></li>
+<li><a href="#简述">简述</a>
+<ul>
+<li><a href="#魔数与主次版本号">魔数与主次版本号</a></li>
+<li><a href="#常量池">常量池</a></li>
+<li><a href="#访问标志">访问标志</a></li>
+<li><a href="#类索引-父类索引和接口索引集合">类索引、父类索引和接口索引集合</a></li>
+<li><a href="#字段标集合-field-info-描述-private-int-a">字段标集合(field_info) &mdash;描述 private int a</a></li>
+<li><a href="#方法表集合-methods-info-描述-private-int-inc">方法表集合(methods_info)&mdash;描述 private int inc()</a></li>
+<li><a href="#属性表集合-attribute-info">属性表集合(attribute_info)</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<h1 id="需要知道的">需要知道的</h1>
+
+<ul>
+<li><p><strong><font color=#36648B >全限定名</font></strong></p>
+
+<p>把类全名中的&rdquo;.&ldquo;替换成&rdquo;/&ldquo;，为了避免产生混淆，一般会在最后加入一个&rdquo;；&rdquo;表示结束。</p>
+
+<p>(eg:org/fenixsoft/clazz/TestClass;)</p></li>
+
+<li><p><strong><font color=#36648B >描述符</font></strong></p>
+
+<p>没有类型和参数修饰的方法或字段名称。</p>
+
+<p>(eg:inc()&mdash;&gt;inc；m字段&mdash;&gt;m)</p></li>
+
+<li><p><strong><font color=#36648B >简单名称</font></strong></p>
+
+<p>描述字段的数据类型、方法参数列表和返回值。具体标识符如下图:</p>
+
+<p><img src="/img/desc.jpg" alt="" /></p>
+
+<p>(eg:&ldquo;java.lang.String[][]&ldquo;&mdash;&gt;&rdquo;[[Ljava/lang/String&rdquo;；&rdquo;int[]&ldquo;&mdash;&gt;&rdquo;[I&rdquo;；“void inc()”&mdash;&gt;“()V”)</p></li>
+
+<li><p><strong><font color=#36648B >Slot</font></strong></p>
+
+<p>Slot，虚拟机为局部变量分配内存所使用的最小单位，长度不超过32位的数据类型占用1个Slot，64位的数据类型（long和double）占用2个Slot。</p></li>
+</ul>
+
+<h1 id="简述">简述</h1>
+
+<p>&ensp;&ensp;&ensp;&ensp;Class文件是一组以8位字节为基础单位的二进制流，各个数据项目<strong>严格的按照顺序紧凑地排列在Class文件中</strong>。Class文件格式采用伪结构来存储数据，这种伪结构格式只有两种数据类型：<strong>无符号</strong>和<strong>表</strong>。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<u>无符号数属于基本的数据类型</u>，以 u1、u2、u4、u8 来分别代表 1 个字节、2 个字节、4 个字节和 8 个字节的无符号数，无符号数可以用来描述数字、索引引用、数量值或者按照 UTF-8 编码构成字符串值。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<u>表是由多个无符号数或者其他表作为数据项构成的复合数据类型，所有表都习惯性地以 “_info” 结尾。</u>表用于描述有层次关系的复合结构的数据，整个 Class 文件本质上就是一张表，它由表 6-1 所示的数据项构成。</p>
+
+<p><img src="/img/class6-1.jpg" alt="" /></p>
+
+<p><br></p>
+
+<h2 id="魔数与主次版本号">魔数与主次版本号</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;每个Class文件的<u>头4个字节称为<strong>魔数</strong></u>，它的唯一作用是<u>确定这个文件是否为一个能被虚拟机接受的Class文件</u>。Class文件的魔术值为“0xCAFEBABE”（咖啡宝贝）。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;紧接着魔数的4个字节存储的是Class文件的版本号。<u>第5个和第6个存储<strong>次版本号</strong></u>，<u>第7个和第8个存储<strong>主版本号</strong></u>。</p>
+
+<p><br></p>
+
+<h2 id="常量池">常量池</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;紧接着魔数与版本号之后的是<strong>常量池入口</strong>，由于常量池中常量的数量是不固定的，所以在常量池的入口需要放置一项<u>u2类型的数据，代表<strong>常量池容量计数值</strong>(constant_pool_count)</u>。
+从1开始计数。</p>
+
+<ul>
+<li><p><strong><font color=#36648B >特征</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1、是Class文件结构中与其它项目关联最多的数据类型。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;2、是占用Class文件空间最大的数据项目之一。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;3、是在文件中第一个出现的表类型数据项目。</p></li>
+
+<li><p><strong><font color=#36648B >主要存放的两大类常量</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1、字面量(Literal)</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;接近于Java语言层面的常量概念,如文本字符窜、声明为final的常量值。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;2、符号引用(Symbolic References)</p>
+
+<ul>
+<li><p>&ensp;类和接口的全限定名</p></li>
+
+<li><p>&ensp;字段的名称和描述符</p></li>
+
+<li><p>&ensp;方法的名称和描述符</p></li>
+</ul></li>
+
+<li><p><strong><font color=#36648B >常量池的项目类型</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;在常量池中每一项常量都是一个表，在jdk1.7中共有14中常量类型，所以常量池的项目就对应14张表，这14张表的每种类型都不一样。但是有一个共同特点：<strong>表开始的第一位都是一个u1类型的标志位，代表这个常量属于哪种类型。</strong></p>
+
+<p><img src="/img/constant.jpg" alt="" /></p></li>
+
+<li><p><strong><font color=#36648B >特别注意</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;需要注意的是，在Class文件中，<strong>方法、字段都需要引用CONSTANT-Utf8_info类型的常量</strong>，所以这种类型的常量的长度有一定的限制，也就是Java中方法、字段的最大长度。在CONSTANT-Utf8_info中，其length的值u2，说明Java虚拟机只能编译最大大约64KB的变量或者方法名。超过的话将不会进行编译。</p></li>
+</ul>
+
+<p><br></p>
+
+<h2 id="访问标志">访问标志</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;常量池之后紧接着<u>两个字节的数据结构是<strong>访问标志(access_flags)</strong></u>,这个标志主要用于识别一些类或者接口层次的访问信息，主要包括：这个Class是类还是接口、是否定义public、是否定义abstract类型；如果是类的话是否被声明为final等。具体的标志访问如下：</p>
+
+<p><img src="/img/accessFlags.jpg" alt="" /></p>
+
+<p><br></p>
+
+<h2 id="类索引-父类索引和接口索引集合">类索引、父类索引和接口索引集合</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;这个数据项主要用于<u>确定这个类的继承关系</u>。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;其中<u><strong>类索引</strong>和<strong>父类索引</strong>都是一个u2类型的数据</u>，而<u><strong>接口索引集合</strong>是一组u2类型的数据</u>。在Java中由于不允许多继承，所以父类索引是唯一的，但是一个类可以实现多个接口，所以得到的接口索引是一个集合，表示这个类实现了哪些接口。</p>
+
+<p><br></p>
+
+<h2 id="字段标集合-field-info-描述-private-int-a">字段标集合(field_info) &mdash;描述 private int a</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;fields_count：字段表计数器，即字段表集合中的字段表数据个数，占2字节，</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;fields：字段表集合，一组字段表类型数据的集合。主要用于描述<u>接口或类中声明的变量</u>。</p>
+
+<ul>
+<li><p><strong><font color=#36648B >特征</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;字段包括<strong>类级变量</strong>和<strong>实例级变量</strong>，但是<strong>不包括方法内部声明的局部变量</strong>（这些变量是存储在Java虚拟机栈中的局部变量表中的）。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;描述一个字段的信息包括：字段的作用域（public、protected、private）、实例变量与否（static）、可变性（final）、并发可见性（volatile）、可否被序列化（transient）、字段数据类型（基本数据类型、对象、数组）、字段名称。字段的信息也被存放在一张表中，其字段表包括三种类型：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1、u2类型访问标志（access_flags），其访问标志在access_flags中</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;2、u2类型的name_index（字段的简单名称）</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;3、u2类型的描述符（descriptor_index）</p>
+
+<p><img src="/img/desc2.jpg" alt="" /></p></li>
+</ul>
+
+<p><br></p>
+
+<h2 id="方法表集合-methods-info-描述-private-int-inc">方法表集合(methods_info)&mdash;描述 private int inc()</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;methods_count：方法表计数器，即方法表集合中的方法表数据个数。占2字节，其值为0x0002，即测试类中有2个方法。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;methods：方法表集合，一组方法表类型数据的集合。<u>方法表结构和字段表结构一样。</u></p>
+
+<ul>
+<li><p><strong><font color=#36648B >注意点</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;如果子类没有重写父类的方法，方法表集合中就不会出现父类方法的信息；有可能会出现由编译器自动添加的方法（如：最典型的<init>，实例类构造器）在Java语言中，重载一个方法除了要求和原方法拥有相同的简单名称外，还要求必须拥有一个与原方法不同的特征签名（，由于特征签名不包含返回值，故Java语言中不能仅仅依靠返回值的不同对一个已有的方法重载；但是在Class文件格式中，特征签名即为方法描述符，只要是描述符不完全相同的2个方法也可以合法共存，即2个除了返回值不同之外完全相同的方法在Class文件中也可以合法共存。</p></li>
+</ul>
+
+<p><br></p>
+
+<h2 id="属性表集合-attribute-info">属性表集合(attribute_info)</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;与Class文件中其它数据项对长度、顺序、格式的严格要求不同，属性表集合不要求其中包含的属性表具有严格的顺序，并且只要属性的名称不与已有的属性名称重复，任何人实现的编译器可以向属性表中写入自己定义的属性信息。虚拟机在运行时会忽略不能识别的属性，为了能正确解析Class文件，虚拟机规范中预定义了虚拟机实现必须能够识别的9项属性（预定义属性已经增加到21项）：</p>
+
+<p><img src="/img/attr.jpg" alt="" /></p>
+
+<ul>
+<li><p><strong><font color=#36648B >Code属性</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;Java程序方法体中的代码经过javac编译最终编译成的字节码指令就保存在Code属性中。但是并非所有的方法表都必须存在这个属性。Code属性是Class文件中最重要的一个属性，如果把一个Java程序中的信息分为<strong>代码（Code）</strong>和<strong>元数据（Metadata，包括类、字段、方法定义及其其他信息）</strong>两部分，那么在整个Class文件中，Code属性用于描述代码，所有其他的数据项目都用于描述元数据。</p></li>
+
+<li><p><strong><font color=#36648B >Exceptions属性</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;这个属性的作用是列举出方法中可能抛出的受查异常（Checked Exception），也就是描述throws 后的列举的异常</p></li>
+
+<li><p><strong><font color=#36648B >LineNumberTable属性</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;主要用于描述Java源代码行号与字节码行号之间的对应关系。这个属性也不是必须的。如果没有这个属性，对程序的直接影响就是当抛出异常的时候无法显示对应的行号；并且在调试的时候无法通过设置断点的方法是调试程序。</p></li>
+
+<li><p><strong><font color=#36648B >LocalVariableTable属性</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;用于描述栈帧中局部变量表中的变量与Java源码中定义的变量的之间的关系。也不属于必须的属性。如果没有这个属性，产生的直接影响就是当别人引用这个方法的时候，所有的参数名称都会丢失，IDE将会使用诸如args0、args1之类的参数进行显示。自然，当调试程序的时候，显示的参数名称是不可知的。</p></li>
+
+<li><p><strong><font color=#36648B >SourceFile属性</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;用于记录这个Class文件的源码文件名称。如果不使用这个属性，那么当抛出异常的时候，堆栈中将不会显示出错代码所属的文件名。</p></li>
+
+<li><p><strong><font color=#36648B >ConstantValue属性</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;作用是通知虚拟机自动为静态变量赋值。要注意的是，只有被static关键字修饰的额变量才可以使用这个属性（类变量）。对于非类变量，初始化是在方法中进行的；对于类变量可以选择两种方式进行变量的初始化：一是在类构造器方法中使用；二是是ConstantValue属性。目前Sun Hotspot的选择原则是：如果一个变量同时使用static和final关键字修饰，并且这个变量是基本数据类型或者java.lang.String类型的话，就使用ConstantValue属性进行初始化。如果没有被final修饰或者并非是基本数据类型，那么将会选择使用方法进行初始化。</p></li>
+
+<li><p><strong><font color=#36648B >InnerClass属性</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;这个属性主要用于记录内部类与宿主类之间的关联关系。</p></li>
+
+<li><p><strong><font color=#36648B >Deprecated以及Synthetic属性</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;这两个属性都属于标志类型的布尔属性，只存在有没有的区别。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;Deprecated属性用于表示某个类、字段或者方法，已经被程序作者定为不再推荐使用，可以通过注解@deprecated实现</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;Synthetic属性代表此字段并不是由Java源码产生的，而是通过编译器自行添加的。</p></li>
+
+<li><p><strong><font color=#36648B >StackMapTable属性</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;该属性的目的在于代替以前比较消耗性能的基于数据流分析的类型推导验证器。</p></li>
+
+<li><p><strong><font color=#36648B >Signature属性</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;这个属性是专门用来记录泛型类型的，因为在Java语言采用的是擦除法实现的泛型，在字节码（Code属性）中，泛型信息编译之后会被擦除。擦除法的优点是能够节省泛型所占的内存空间，缺点是在运行期间无法通过反射得到泛型信息，而Signature属性则弥补了这一缺陷。现在的Java反射API已经能够得到泛型信息，功劳就在于这个属性。</p></li>
+
+<li><p><strong><font color=#36648B >BootstrapMethods属性</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;这个属性用于保存invokedynamic指令引用的引导方法限定符。该指令用于在运行时动态解析出调用点限定符所引用的方法，并执行该方法。</p></li>
+</ul>
+
+<p><br></p>
+
+<p>内容主要参考来源：《深入理解Java虚拟机》第二版——周志明</p>
+
+<p>图片来源：网络</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/jvmchap2-3/" data-toggle="tooltip" data-placement="top" title="内存分配与回收策略">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/java" title="java">
+                            java
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/jvm" title="jvm">
+                            jvm
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="阿岑的部落" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:645207604@qq.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/img/weChat.jpg">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/ACen6XD">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; 阿岑的部落 2019
+                    <br>
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>
