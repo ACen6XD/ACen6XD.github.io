@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="阿岑的部落">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://ACen6XD.github.io//img/tag-bg.jpg">
+    <meta property="twitter:image" content="https://ACen6XD.github.io//img/tag-bg.jpg" />
+    
+
+    
+    <meta name="title" content="虚拟机类加载机制" />
+    <meta property="og:title" content="虚拟机类加载机制" />
+    <meta property="twitter:title" content="虚拟机类加载机制" />
+    
+
+    
+    <meta name="description" content="复习虚拟机类加载的时机，加载的过程以及类加载器的相关内容">
+    <meta property="og:description" content="复习虚拟机类加载的时机，加载的过程以及类加载器的相关内容" />
+    <meta property="twitter:description" content="复习虚拟机类加载的时机，加载的过程以及类加载器的相关内容" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Java,博客, 个人网站">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>虚拟机类加载机制- ACen Blog</title>
+
+    <link rel="canonical" href="/post/jvmchap3-2/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/syntax.css">
+    
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/docco.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">阿岑的部落</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/categories/study">study</a>
+                    </li>
+                    
+                    
+		    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/post-bg-coffee.jpeg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/java" title="Java">
+                            Java
+                        </a>
+                        
+                        <a class="tag" href="/tags/jvm" title="JVM">
+                            JVM
+                        </a>
+                        
+                    </div>
+                    <h1>虚拟机类加载机制</h1>
+                    <h2 class="subheading">JVM第三章知识点总结part3</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                 &#34;ACen&#34;
+                         
+                        on 
+                        Sunday, November 10, 2019
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#简述">简述</a>
+<ul>
+<li><a href="#1-类加载的时机">1、类加载的时机</a></li>
+<li><a href="#2-类加载的过程">2、类加载的过程</a>
+<ul>
+<li><a href="#2-1-加载">2.1、加载</a></li>
+<li><a href="#2-2-验证">2.2、验证</a></li>
+<li><a href="#2-3-准备">2.3、准备</a></li>
+<li><a href="#2-4-解析">2.4、解析</a></li>
+<li><a href="#2-5-初始化">2.5、初始化</a></li>
+</ul></li>
+<li><a href="#3-类加载器">3、类加载器</a>
+<ul>
+<li><a href="#3-1-类与类加载器">3.1、类与类加载器</a></li>
+<li><a href="#3-2-双亲委派模型">3.2、双亲委派模型</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<h1 id="简述">简述</h1>
+
+<p>&ensp;&ensp;&ensp;&ensp;再前两章的内容中，主要复习了Class文件的存储格式以及字节码的相关内容。这些内容最终都要加载到虚拟机之后才能使用。那么虚拟机如何加载这些Class文件，Class文件中的信息进入虚拟机后会发生什么变化？</p>
+
+<ul>
+<li><p><strong><font color=#36648B >1、虚拟机的类加载机制</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校检、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。</strong></p></li>
+
+<li><p><strong><font color=#36648B >2、Java语言的动态加载和链接</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;在Java语言中，类型的加载、链接和初始化过程都是在<strong>程序运行期</strong>间完成的，这种策略会略微增加类加载的时的性能开销，但是会为Java应用程序提供高度的灵活性，<u>Java里天生可以动态扩展的语言特性就是依赖运行期动态加载和动态链接的这个特点实现的</u>。比如，如果编写一个面向接口的程序，可以等到运行时再指定其具体实现类。</p></li>
+</ul>
+
+<h2 id="1-类加载的时机">1、类加载的时机</h2>
+
+<ul>
+<li><p><strong><font color=#36648B >1.1、类的生命周期</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;类从加载到虚拟机内存中开始，到卸载出内存为止，整个生命周期包括：<strong>加载(Loading)</strong>、<strong>验证（Verification）</strong>、<strong>准备(Preparation)</strong>、<strong>解析(Resolution)</strong>、<strong>初始化(Initialization)</strong>、<strong>使用(Using)</strong>和<strong>卸载(Unloading)</strong>。其中验证、准备、解析三个阶段统称为链接。具体的顺序如下图：</p>
+
+<p><img src="/img/classLife.jpg" alt="" /></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;在上图中，<strong>加载</strong>、<strong>验证</strong>、<strong>准备</strong>、<strong>初始化</strong>和<strong>卸载</strong>这5个阶段顺序是确定的，而解析阶段则不一定：<u>它在某些情况下可以在初始化阶段之后再开始，这也是为了支持Java语言的运行时绑定(也称为动态绑定或晚期绑定)</u>。</p></li>
+
+<li><p><strong><font color=#36648B >1.2、类在何时初始化</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;什么时候进行加载，虚拟机规范中没有强制要求，但是<strong>初始化操作有严格的规定，5种情况下必须立刻执行类的“初始化”</strong>（很好理解，我需要这个类的相关信息了，必须准备好，此时加载、验证、准备已经开始）：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>1</strong>、遇到new、getstatic、putstatic、invokestatic这4条字节码指令时，如果类没有进行过初始化，则需要先触发其初始化。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>2</strong>、使用java.lang.reflect包的方法对类进行反射调用时，如果类没有进行过初始化，则需要先触发其初始化。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>3</strong>、当初始化一个类的时候，其父类还没有进行过初始化，则需要先触发其父类的初始化。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>4</strong>、当虚拟机启动时，用户需要指定一个要执行的主类(包含main()方法的那个类)，虚拟机就会先初始化这个类。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>5</strong>、使用Jdk1.7动态语言支持的时候的一些情况。</p>
+
+<p><br></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;上述五种情况称为对一个类进行主动引用。<strong>除此之外，所有引用类的方法都不会触发初始化，称为被动引用。</strong>如下三个例子：</p>
+
+<ul>
+<li><p>通过子类引用父类的静态字段，不会导致子类初始化。</p></li>
+
+<li><p>通过数组定义来引用类，不会触发此类的初始化。</p></li>
+
+<li><p>常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用定义常量的类，因此不会触发定义常量的类的初始化。</p></li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<h2 id="2-类加载的过程">2、类加载的过程</h2>
+
+<h3 id="2-1-加载">2.1、加载</h3>
+
+<ul>
+<li><p><strong><font color=#36648B >概述</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;“加载”是“类加载”过程中的第一个阶段，在这个阶段，虚拟机需要完成如下三个事：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>1、通过一个类的全限定名获取定义此类的二进制字节流。</strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>2、将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。</strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>3、在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类各种数据的访问入口。</strong></p></li>
+
+<li><p><strong><font color=#36648B >数组类和非数组类的加载机制</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>非数组类</strong>加载阶段既可以使用系统提供的类加载器来完成，也可以由用户自定义的类加载器去完成。（即重写一个类加载器的loadClass（）方法）</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>数组类</strong>本身不通过类加载器创建，由虚拟机直接创建，但是又和类加载器有很大的关系。因为数据的元素类型最终要类加载器去创建。一个数组类的创建过程要遵循下面规则：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1.如果数组的类型是引用类型，就递归采用上面的加载过程加载这个组件类型，数组将在加载该组件类型的类加载器的类名称空间上被标识。（类必须和类加载器一同确定唯一性）</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;2.如果不是引用类型（int[]），会标记数组为引导类加载器关联</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;3.数组类的可见性与组件类型可见性一致，如果不是引用类型，就是public</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;加载完成之后，类就按照虚拟机的格式存储在方法区之中，在内存中实例化一个java.lang.Class类的对象。对于HotSpot而言，这个对象放在方法区中，而不是堆中。</p></li>
+
+<li><p><strong><font color=#36648B >注意点</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>加载阶段</strong>与<strong>链接阶段</strong>的部分内容(如一部分的文件格式验证动作)是<strong>交叉进行</strong>的，<U>加载阶段尚未完成，链接阶段可能已经开始</U>。</p></li>
+</ul>
+
+<h3 id="2-2-验证">2.2、验证</h3>
+
+<ul>
+<li><p><strong><font color=#36648B >概述</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;验证是链接阶段的第一步，这一阶段目的是为了确保Class文件的字节流中包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身安全。从整体上看，验证阶段大致上会完成4个阶段的检验动作：<strong>文件格式验证</strong>、<strong>元数据验证</strong>、<strong>字节码验证</strong>、<strong>符号引用验证</strong>。</p></li>
+
+<li><p><strong><font color=#36648B >文件格式验证</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;第一阶段要验证字节流是否符合Class文件格式的规范，并且能被当前版本的虚拟机处理。验证魔方数、版本号、常量池类型、指向常量的索引、utf8编码。主要目的就是<strong>保证输入的字节流能正确地解析并存储于方法区之内，格式上符合描述一个Java类型信息的要求</strong>。只有通过这个验证，才会到内存中的方法区进行存储，后续验证阶段就是基于方法区的内容，而不是二进制字节流了。</p></li>
+
+<li><p><strong><font color=#36648B >元数据验证</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;第二阶段是对字节码描述的信息进行语义分析，以保证其描述的信息符合Java语言规范的要求。检查这个类是否有父类，是否满足继承体系（单继承，不能继承final类），字段方法等是否与父类冲突。这阶段的主要目的是<strong>对类的元数据信息进行语义校检，保证不存在不符合Java语言规范的元数据信息</strong>。</p></li>
+
+<li><p><strong><font color=#36648B >字节码验证</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;第三阶段是整个验证过程中最复杂的一个阶段，主要目的是<strong>通过数据流和控制流分析，确定程序语义是合法的、符合逻辑的</strong>。例如：保证任何时候操作数栈的数据类型和指令代码序列配合工作，用long指令加载一个int类型之类的事情。保证跳转指令不会跳到方法体以外的字节码指令上。保证类型转换是有效的，子类赋给父类变量是安全的，不相干的就是危险的等等操作。这个阶段不能保证完全正确，可能会有问题。</p></li>
+
+<li><p><strong><font color=#36648B >符号引用验证</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;最后一个阶段的校验发生在虚拟机将符号引用转化为直接引用的时候，这个转化动作将在<strong>解析</strong>阶段中发生。符号引用验证可以看做是对类自身以外(常量池中的各种符号引用)的信息进行匹配性校验。主要校验：能否找到对应的引用类，是否存在相关方法属性字段，是否有权限访问（private)。如果无法通过验证，会抛出java.lang.IncompatibleClassChangeError异常的子类，如IllegalAccessError、NoSuchFieldError和NoSuchMethodError等。</p></li>
+</ul>
+
+<p>&ensp;&ensp;&ensp;&ensp;<font color="red">验证阶段很重要，但是如果保证代码是正常的，可以关闭这个阶段缩短类加载时间，通过参数-Xverify:none来关闭。</font></p>
+
+<h3 id="2-3-准备">2.3、准备</h3>
+
+<ul>
+<li><p><strong><font color=#36648B >概述</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;准备阶段是<strong>正式为类变量分配内存并设置类变量初始值的阶段，这些变量所使用的内存都将在方法区中进行分配</strong>。注意，只包含static类变量，实例变量是在堆中的，初始值一般是数据类型的零值，比如public static int value = 123。初始值是0，而不是123，这个时候没有执行任何Java方法，而把value赋值为123的putstatic指令是程序被编译后，存放在类构造器<clinit>()方法中，所以在初始化阶段才会赋值成123。又要注意，一般是数据类型的零值，<u>但是还有特殊情况，比如被final修饰，存在ConstantValue属性，会在准备阶段就会赋值</u>。</p></li>
+</ul>
+
+<h3 id="2-4-解析">2.4、解析</h3>
+
+<ul>
+<li><p><strong><font color=#36648B >概述</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>解析阶段是虚拟机将常量池内的<u>符号引用</u>替换成<u>直接引用</u>的过程。</strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1、符号引用（Symbolic References）：符号引用以一组符号来描述所引用的目标，符号可以是任何形式的字面量，只要使用时能无歧义地定义到目标即可。<strong>与虚拟机实现的内存布局无关，引用的目标不一定已经加载到内存中</strong>（这个特性很有用），但是能接受的符号引用必须是一致的，因为这个字面量形式明确定义在Java虚拟机规范的Class文件格式中。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;2、直接引用（Direct References）：直接引用可以是直接指向目标的指针、相对偏移量或是一个能间接定位到目标的句柄。直接引用和虚拟机实现的内存布局相关，在不同虚拟机中符号引用会被翻译出不同的直接引用。如果有了直接引用，那引用的目标必定已经存在在内存中。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;虚拟机规范中没有规定解析的发生具体时间，所以是否是在加载时就完成符号引用的解析，还是到符号引用被使用时再进行解析，这个根据实际需要决定。但是<strong>规范规定了16个操作符号引用的字节码之前，要完成解析动作</strong>，为：anewarray、checkcast、getfield、getstatic、instanceof、invokedynamic、invokeinterface、invokespecial、invokestatic、invokevirtual、ldc、ldc_w、multianewarray、new、putfield、putstatic。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;对一个符号引用进行多次解析请求是很常见的，为了避免这个问题，虚拟机实现可以在第一个解析成功后，缓存结果，后续使用这个结果即可。但是如果第一次失败，后面都会失败。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;上述避免重复解析的规则，对于指令invokedynamic指令不成立。因为这个本来就是用来支持动态语言的，其对应的引用称为“动态调用点限定符&rdquo;。动态的含义就是必须等到程序实际运行到这条指令的时候，解析动作才能进行。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;解析动作主要针对<strong>类或接口</strong>、<strong>字段</strong>、<strong>类方法</strong>、<strong>接口方法</strong>、<strong>方法类型</strong>、<strong>方法句柄</strong>和<strong>调用点限定符</strong>7类符号引用进行。Java是静态类型语言，后面3种与JDK7种新增的动态语言支持相关，本章不进行介绍，留到动态语言调用，即虚拟机执行引擎的时候描述。</p></li>
+
+<li><p><strong><font color=#36648B >类或接口的解析</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;如果当前代码是在Test类中，将一个未解析过的符号引用N解析成一个类或接口C的直接引用，那么需要完成下面步骤：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1.如果C不是数组类型，虚拟机会将N的全限定名传递给Test的类加载器，去加载类C，可能触发其他的加载（例如加载这个类的父类或实现的接口），一旦失败解析失败。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;2.如果C是数组，N的描述符会是类似[Ljava/lang/Integer形式，会按1的规则加载数组的元素类型，接着由虚拟机生成一个代表此数组维度和元素的数组对象。这里就是加载Integer类了。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;3.上述步骤成功，在虚拟机中已经有一个有效的C类或接口了，但是还需要对<strong>符号引用进行验证</strong>，确定Test是否能够访问C，不能访问抛出IllegalAccessError</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;通俗的说就是Test类有个X  tmp对象。类型X没有被解析，是一个符号引用，如果不是一个数组，就要用Test的类加载器加载这个类，如果是数组，也要加载，不过要额外开辟数组对象。</p></li>
+
+<li><p><strong><font color=#36648B >字段解析</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;要解析一个未被解析过的字段符号引用，<u>首先会对符号引用进行解析，也就是字段所属的类或接口的符号引用</u>。如果在解析这个类或接口符号引用过程中出任何异常，都会导致字段符号引用解析失败。解析成功，需要进行下面操作，假设字段所属类或接口是C。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1、如果C本身就包含了简单名称和字段描述都与目标相匹配的字段，则返回这个字段的直接引用，查找结束。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;2、否则，如果在C中实现了接口，将会按照继承的关系从下往上递归搜索各个接口和它的父接口，如果接口中包含了简单名称和字段描述都与目标相匹配的字段，则返回这个字段的直接引用，查找结束。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;3、否则，如果C不是java.lang.Object的话，将会按照继承的关系从下往上递归搜索其父类，如果父类中包含了简单名称和字段描述都与目标相匹配的字段，则返回这个字段的直接引用，查找结束。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;4、否则，查找失败，抛出java.lang.NoSuchFieldError异常。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;如果在查找过程中成功返回了引用，将会对这个字段进行权限验证，如果发现不具备对字段的访问权限，抛出java.lang.IllegalAccessError异常。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;通俗的说就是：类Test打印了C.value这个字段，C中没有，先从下往上的接口中查找，仍没有，从下往上的继承找，还是没找到就抛出异常。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;实际上编译器会更严格一些，如果一个字段同时出现在C的接口和父类中，或者同时在自己或父类的多个接口中出现，编译器可能拒绝编译。</p></li>
+
+<li><p><strong><font color=#36648B >类方法解析</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;方法解析和字段解析第一步都一样，先对所属的类或接口的符号引用进行解析，成功后会对后续的类方法进行搜索。依然用C来表示这个类。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1、类方法和接口方法符号引用的常量类型定义是分开的，如果在类方法表中发现class_index中索引的C是个接口，那么就直接抛出java.lang.IncompatibleClassChangeError异常。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;2、如果通过了第一步，在类C中查找是否有简单名称和描述符都与目标相匹配的方法，如果有则返回这个方法的直接引用，查找结束。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;3、否则，在类C的父类中递归查找是否有简单名称和描述符都与目标相匹配的方法，如果有则返回这个方法的直接引用，查找结束。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;4、否则，在类C实现的接口列表及它们的父接口中递归查找是否有简单名称和描述符都与目标相匹配的方法，如果存在，说明C是一个抽象类，查找结束，抛出java.lang.AbstractMethodError异常。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;5、否则，宣告方法查找失败，抛出java.lang.NoSuchMethodError。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;如果在查找过程中成功返回了引用，将会对这个方法进行权限验证，如果发现不具备对方法的访问权限，抛出java.lang.IllegalAccessError异常。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;通俗的讲Test中调用一个C.doSomething()方法，先找这个引用是不是一个接口，不是就在C中找，没找到就找这个方法的父类中是否有实现，还没找到那就是接口的了，没有具体实现，要抛出异常，都没找到更错的离谱了。</p></li>
+
+<li><p><strong><font color=#36648B >接口方法解析</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;接口方法也需要先解析出接口方法表中的class_index项中索引的方法所属的类或接口的符号引用，解析成功，依然用C表示这个接口。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1、如果在接口表中发现class_index项中索引C是个类而不是接口，那么就直接抛出java.lang.IncompatibleClassChangeError异常。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;2、否则，在接口C中查找是否有简单名称和描述符都与目标相匹配的方法，如果有则返回这个方法的直接引用，查找结束。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;3、否则，在接口C的父类中递归查找，知道java.lang.Object类为止，看是否有简单名称和描述符都与目标相匹配的方法，如果有则返回这个字段的直接引用，查找结束。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;4、否则，宣告方法查找失败，抛出java.lang.NoSuchMethodError。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;由于接口中默认都是public的，所以不存在访问权限问题，因此接口方法的符号解析不会抛出java.lang.IllegalAccessError异常。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;通俗的讲Test调用C.doSomething()，这是一个接口方法，如果C是类那么抛出异常，如果C中没有这个方法，找父接口，没找到也要抛出异常。</p></li>
+</ul>
+
+<h3 id="2-5-初始化">2.5、初始化</h3>
+
+<ul>
+<li><p><strong><font color=#36648B >概述</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>类初始化阶段是类加载过程的最后一步</strong>，准备阶段，变量赋予了零值，初始化阶段要赋予真正的值了。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;初始化阶段是执行类构造器<clinit>()方法的过程。这个方法是由<strong>类变量的赋值动作</strong>，和<strong>静态语句块static{}语句</strong>合并产生的。由顺序决定，静态块只能访问到定义在静态块之前的变量，之后的变量可以赋值，不能访问。这个方法与构造函数<init>()方法不同，不需要显示的调用父类构造器，虚拟机会保证执行子类的<clinit>()方法之前，父类的已经执行完毕了。由于父类的先执行，所以父类的static会先执行。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;* 此外<clinit>方法不是必须的，如果没有赋值操作且没有静态代码块，就不会生成这个方法。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;* 接口虽然没有static块，但是会由赋值操作，与类不同的地方在于接口不需要先执行父类的<clinit>()方法。只有在父接口的变量使用时，才会初始化父接口。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;* 另外接口的实现类在初始化的时候也不会执行接口的<clinit>()方法。虚拟机会保证一个类的<clinit>()方法在多线程环境被正确地加锁、同步，如果有多个线程同时初始化，只会执行一次。其他线程会阻塞，所以执行时间很久会导致多个线程阻塞。</p></li>
+</ul>
+
+<h2 id="3-类加载器">3、类加载器</h2>
+
+<p>&ensp;&ensp;&ensp;&ensp;虚拟机设计团队把类加载阶段中的<strong>“通过一个类的全限定名获取定义此类的二进制字节流”</strong>。放到Java虚拟机外部去实现，<u>以便让应用程序自己决定如何去获取所需要的类</u>。实现这个动作的代码模块就称为“类加载器”。</p>
+
+<h3 id="3-1-类与类加载器">3.1、类与类加载器</h3>
+
+<p>&ensp;&ensp;&ensp;&ensp;比较两个类是否“相同”，只有在这两个类是由同一个类加载器加载的前提下才有意义，否则，即使这两个类来源于同一个Class文件,被同一个虚拟机加载，只要加载它们的类加载器不同，那这两个类就必定不相等。里的相等包括Class的equals方法、isAssignableFrom方法和isInstance方法。</p>
+
+<h3 id="3-2-双亲委派模型">3.2、双亲委派模型</h3>
+
+<ul>
+<li><p><strong><font color=#36648B >概述</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;从Java虚拟机角度来讲,只存在两种不同的类加载器：<u>启动类加载器（Bootstrap ClassLoader）</u>，这个类加载器使用C++语言实现，是虚拟机自身的一部分；另一种就是<u>所有其他类的类加载器</u>，这些加载器都由Java语言实现，独立于虚拟机外部，并且全部都继承自抽象类java.lang.ClassLoader。从Java开发人员的角度来看，类加载器其实还可以划分的更加细致一些，主要如下三种分类：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>1、启动类加载器（Bootstrap ClassLoader）</strong>：这个放在java_home\lib目录中，或者-Xbootclasspath参数所指定的路径，被虚拟机识别（固定名称）。这个加载器无法被程序直接引用，用户在编写自定义加载器时，如果需要将加载请求委派给引导类加载器，直接使用null代替即可。getClassLoader方法返回null。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>2、扩展类加载器（Extension ClassLoader)</strong>：这个加载器由sun.misc.Launcher$ExtClassLoader实现，负责加载java_home\lib\ext目录中的，或者被java.ext.dirs系统变量指定的路径所在类库，开发者可以直接使用扩展类加载器。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>3、应用程序类加载器（Application ClassLoader）</strong>：这个类加载器由sun.misc.Launcher$AppClassLoader实现。这个类加载器是ClassLoader中的getSystemClassLoader方法的返回值，所以也称为系统类加载器。负责加载用户ClassPath上所指定的类库，可以直接使用，如果代码里面没有定义自己的加载器，就会默认使用这个。</p>
+
+<p><img src="/img/sqwpmx.jpg" alt="" /></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;上图所示的类加载器之间的这种层次关系，就是类加载器的双亲委派模型（Parents Delegation Model）。<strong>双亲委派模型要求除了顶层的启动类加载器外，其余的类加载器都应当有自己的父类加载器</strong>。这里的类加载器之间的父子关系一般不会用继承的关系来实现，都是用组合的关系来复用父加载器的代码。</p></li>
+
+<li><p><strong><font color=#36648B >工作过程</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的类加载器都是如此，因此所有的加载请求最终都应该传送到顶层的启动类加载器中，只有当父类加载器反馈自己无法完成这个加载请求时，子类加载器才会去尝试自己去加载。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;这个模型的好处在于Java类有了一种优先级的层次关系。比如Object类，这个毫无疑问应该交给最上层的加载器进行加载，所以在各个类加载器环境中这个类都是同一个类。如果没有双亲委派模型，自己写一个java.lang.Object类，会出现很多个不通的Object类，应用程序会一片混乱。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;实现很简单，都在ClassLoader的loadClass方法之中，先检查是否被加载过，若没有加载就调用父类加载器的loadClass方法，若父类加载器为空，默认使用启动类加载器，如果加载失败，抛出异常后调用自己的findClass()方法进行加载。</p></li>
+
+<li><p><strong><font color=#36648B >破坏双亲委派模型</font></strong></p>
+
+<p>&ensp;&ensp;&ensp;&ensp;双亲委派模型不是一个强制性的约束模型，有被破坏的情况。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>第一次是因为兼容老版本的JDK，这个模型在1.2版本才出现，但是ClassLoader在1.0就存在了</strong>。添加了一个protected方法findClass()，之前版本继承ClassLoader唯一目的就是重写loadClass方法，因为虚拟机会去调用loadClassInternal方法，这个方法就是执行loadClass()。1.2之后就不提倡重写loadClass了，而是写findClass方法，因为loadClass的基本逻辑已经写好，父类加载失败，就会调用自己的findClass进行加载，这样保证新写出来的类加载器是符合双亲委派模型的。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>第二次破坏是因为双亲委派模型自身的缺陷</strong>，作为顶层的类通常是被底层类调用的，但是如果顶层的基本类调用了底层的用户类就麻烦大了。顶层的类加载器并不认识用户的类，这样如何去加载这个类呢？典型的例子就是JNDI服务，其目的是对资源进行集中管理和查找，需要调用应用程序的classpath的代码。比如SPI服务发现：这里。可以看到系统类需要加载自己写的类，这个就麻烦了。为了解决这个问题，设计了一个线程上下文加载器Thread Context ClassLoader。这个类加载器可以通过Thread类的setContextClassLoader方法进行设置，如果创建线程的时候没有设置，将会从父线程中继承一个，全局范围都没有设置，默认就是应用程序类加载器。设置了这个，就可以在父加载器中获取子加载器，让其进行加载类了。这是无奈之举，很多SPI加载动作都采用了这种方式，比如：JNDI、JDBC、JCE、JAXB、JBI等。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;<strong>第三次被破坏是由于追求动态性导致的</strong>。比如：代码热替换，模块热部署等。比较出名的就是OSGi这个事实上的Java模块化标准，其模块热部署的关键就是它自定义的类加载器实现机制。每个模块（Bundler）都有一个自己的类加载器，当需要更换一个Bundle时，把Bundle连同类加载器一起换掉以实现代码热替换。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;OSGi按照下面的顺序进行类搜索：</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;1.java.*开头的类委派给父类加载器加载</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;2.将委派列表中的类交给父类加载器加载</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;3.将import列表中的类委派给Export这个类的Bundle的类加载器加载</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;4.查找当前Bundle的Classpath，使用自己的类加载器加载</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;5.查找类是否在自己的Fragment Bundle中，如果在，委派给Fragment Bundle进行加载</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;6.查找Dynamic Import列表的Bundle，委派给对应Bundle加载</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;7.类查找失败</p></li>
+</ul>
+
+<p><br></p>
+
+<p>内容主要参考来源：《深入理解Java虚拟机》第二版——周志明</p>
+
+<p>图片来源：网络</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/jvmchap3-1/" data-toggle="tooltip" data-placement="top" title="字节码简介">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/java" title="java">
+                            java
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/jvm" title="jvm">
+                            jvm
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="阿岑的部落" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:645207604@qq.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/img/weChat.jpg">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/ACen6XD">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; 阿岑的部落 2019
+                    <br>
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>
