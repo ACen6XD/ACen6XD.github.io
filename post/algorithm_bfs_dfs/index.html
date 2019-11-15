@@ -15,15 +15,15 @@
     
 
     
-    <meta name="title" content="" />
-    <meta property="og:title" content="" />
-    <meta property="twitter:title" content="" />
+    <meta name="title" content="算法总结(一)" />
+    <meta property="og:title" content="算法总结(一)" />
+    <meta property="twitter:title" content="算法总结(一)" />
     
 
     
-    <meta name="description" content="阿岑的个人博客">
-    <meta property="og:description" content="阿岑的个人博客" />
-    <meta property="twitter:description" content="阿岑的个人博客" />
+    <meta name="description" content="深度优先遍历(DFS)和广度优先遍历(BFS)的思想以及算法中的具体例子">
+    <meta property="og:description" content="深度优先遍历(DFS)和广度优先遍历(BFS)的思想以及算法中的具体例子" />
+    <meta property="twitter:description" content="深度优先遍历(DFS)和广度优先遍历(BFS)的思想以及算法中的具体例子" />
     
 
     
@@ -34,9 +34,9 @@
     <meta name="keyword"  content="Java,博客, 个人网站">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Tags- ACen Blog</title>
+    <title>算法总结(一)- ACen Blog</title>
 
-    <link rel="canonical" href="/tags/">
+    <link rel="canonical" href="/post/algorithm_bfs_dfs/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -150,14 +150,45 @@
 
 
 
-<header class="intro-header" style="background-image: url('/img/tag-bg.jpg')">
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/post-bg-coffee.jpeg')
+    }
+</style>
+<header class="intro-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>阿岑的部落 </h1>
-                    
-		    <span class="subheading">学习,运动,生活</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/algorithm" title="Algorithm">
+                            Algorithm
+                        </a>
+                        
+                        <a class="tag" href="/tags/dfs" title="DFS">
+                            DFS
+                        </a>
+                        
+                        <a class="tag" href="/tags/bfs" title="BFS">
+                            BFS
+                        </a>
+                        
+                    </div>
+                    <h1>算法总结(一)</h1>
+                    <h2 class="subheading">深度优先和广度优先</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                 &#34;ACen&#34;
+                         
+                        on 
+                        Monday, November 11, 2019
+                        
+                        
+                        
+                    </span>
                 </div>
             </div>
         </div>
@@ -170,13 +201,89 @@
 <article>
     <div class="container">
         <div class="row">
+
             
             <div class="
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 post-container">
 
-         	
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#深度优先遍历-dfs-和广度优先遍历-bfs">深度优先遍历(DFS)和广度优先遍历(BFS)</a>
+<ul>
+<li><a href="#算法分析">算法分析</a>
+<ul>
+<li><a href="#font-color-36648b-深度优先遍历-dfs-font"><strong><font color=#36648B >深度优先遍历(DFS)</font></strong></a></li>
+<li><a href="#font-color-36648b-广度优先遍历-bfs-font"><strong><font color=#36648B >广度优先遍历(BFS)</font></strong></a></li>
+</ul></li>
+<li><a href="#两者的相似之处和区别">两者的相似之处和区别</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<h1 id="深度优先遍历-dfs-和广度优先遍历-bfs">深度优先遍历(DFS)和广度优先遍历(BFS)</h1>
+
+<h2 id="算法分析">算法分析</h2>
+
+<ul>
+<li><h3 id="font-color-36648b-深度优先遍历-dfs-font"><strong><font color=#36648B >深度优先遍历(DFS)</font></strong></h3>
+
+<p>（1）首先选定一个<strong>未被访问过</strong>的顶点V作为起始顶点（或者访问指定的起始顶点V），并将其标记为已访问过；</p>
+
+<p>（2）然后搜索与顶点V邻接的所有顶点，判断这些顶点是否被访问过，如果有未被访问过的顶点，则任选一个顶点W进行访问；再选取与顶点W邻接的未被访问过的任一个顶点并进行访问，依次重复进行。当一个顶点的所有的邻接顶点都被访问过时，则依次回退到最近被访问的顶点。若该顶点还有其他邻接顶点未被访问，则从这些未被访问的顶点中取出一个并重复上述过程，直到与起始顶点V相通的所有顶点都被访问过为止。</p>
+
+<p>（3）若此时图中依然有顶点未被访问，则再选取其中一个顶点作为起始顶点并访问之，转（2）。反之，则遍历结束。</p>
+
+<p>那么问题来了,我们如何判断起始顶点V的邻接顶点是否被访问过呢？</p>
+
+<p><font color="red">解决办法：为每个顶点设立一个“访问标志Visited”。首先将图中每个顶点的访问标志设为 “0”或FALSE表示未访问，“1”或true表示已访问,  之后搜索图中每个顶点，如果未被访问，则以该顶点为起始点，进行深度优先遍历，否则继续检查下一顶点。</font></p></li>
+
+<li><h3 id="font-color-36648b-广度优先遍历-bfs-font"><strong><font color=#36648B >广度优先遍历(BFS)</font></strong></h3>
+
+<p>其思路为从图上一个节点出发，访问先访问其直接相连的子节点，若子节点不符合，再问其子节点的子节点，按级别顺序依次访问，直到访问到目标节点。</p>
+
+<p>主要借助一个队列、一个布尔类型数组、邻接矩阵完成（判断一个点是否查看过，用于避免重复到达同一个点，造成死循环等），先将各点以及各点的关系存入邻接矩阵。</p>
+
+<p>再从第一个点开始，将一个点存入队列，然后在邻接表中找到他的相邻点，存入队列，每次pop出队列头部并将其打印出来（文字有些抽象，实际过程很简单），整个过程有点像往水中投入石子水花散开。</p>
+
+<p>BFS可用于解决2类问题：</p>
+
+<p><font color="red">1、从A出发是否存在到达B的路径；</p>
+
+<p>2、从A出发到达B的最短路径(这个应该叫最少步骤合理)；</font></p></li>
+</ul>
+
+<h2 id="两者的相似之处和区别">两者的相似之处和区别</h2>
+
+<p>深度搜索与广度搜索的控制结构和产生系统很相似，唯一的区别在于对扩展节点选取上。由于其保留了所有的前继节点，所以在产生后继节点时可以去掉一部分重复的节点，从而提高了搜索效率。这两种算法每次都扩展一个节点的所有子节点，而不同的是，<u>深度搜索下一次扩展的是本次扩展出来的子节点中的一个，而广度搜索扩展的则是本次扩展的节点的兄弟节点。在具体实现上为了提高效率,所以采用了不同的数据结构。</u></p>
+
+<p><br></p>
+
+<p>内容主要参考来源：网络</p>
+
+<p>图片来源：网络</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/jvmchap3-2/" data-toggle="tooltip" data-placement="top" title="虚拟机类加载机制">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
                 
 <div id="disqus-comment"></div>
 
@@ -205,13 +312,13 @@
                         
                         
                         <a href="/tags/java" title="java">
-                        java
+                            java
                         </a>
                         
                         
                         
                         <a href="/tags/jvm" title="jvm">
-                        jvm
+                            jvm
                         </a>
                         
                         
@@ -236,7 +343,7 @@
                 <ul class="list-inline text-center">
                    
                    <li>
-                       <a href='/tags/index.xml' rel="alternate" type="application/rss+xml" title="阿岑的部落" >
+                       <a href='' rel="alternate" type="application/rss+xml" title="阿岑的部落" >
                            <span class="fa-stack fa-lg">
                                <i class="fa fa-circle fa-stack-2x"></i>
                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
