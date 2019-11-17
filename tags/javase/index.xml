@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>JavaSE on 阿岑的部落</title>
+    <link>https://ACen6XD.github.io/tags/javase/</link>
+    <description>Recent content in JavaSE on 阿岑的部落</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 12 Nov 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://ACen6XD.github.io/tags/javase/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>JavaSE复习总结(一)</title>
+      <link>https://ACen6XD.github.io/post/javase1/</link>
+      <pubDate>Tue, 12 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ACen6XD.github.io/post/javase1/</guid>
+      <description>JavaSE复习总结(一) String和Long String 1、不变性 String类被final修饰,说明String绝对不可能被继承，也就是说任何对</description>
+    </item>
+    
+  </channel>
+</rss>

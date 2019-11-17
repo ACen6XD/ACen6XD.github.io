@@ -6,10 +6,19 @@
     <description>Recent content in JVM on 阿岑的部落</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 10 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 13 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ACen6XD.github.io/tags/jvm/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>虚拟机字节码执行引擎</title>
+      <link>https://ACen6XD.github.io/post/jvmchap3-3/</link>
+      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ACen6XD.github.io/post/jvmchap3-3/</guid>
+      <description>简述 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;再前一章的内容中，主要复习了虚拟机如何加载Class文件，Class文件中的信息进入虚拟</description>
+    </item>
     
     <item>
       <title>虚拟机类加载机制</title>

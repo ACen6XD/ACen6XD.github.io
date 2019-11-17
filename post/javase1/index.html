@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="阿岑的部落">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://ACen6XD.github.io//img/tag-bg.jpg">
+    <meta property="twitter:image" content="https://ACen6XD.github.io//img/tag-bg.jpg" />
+    
+
+    
+    <meta name="title" content="JavaSE复习总结(一)" />
+    <meta property="og:title" content="JavaSE复习总结(一)" />
+    <meta property="twitter:title" content="JavaSE复习总结(一)" />
+    
+
+    
+    <meta name="description" content="复习Java基础知识中的String、Long相关知识；常用关键字；常用方法">
+    <meta property="og:description" content="复习Java基础知识中的String、Long相关知识；常用关键字；常用方法" />
+    <meta property="twitter:description" content="复习Java基础知识中的String、Long相关知识；常用关键字；常用方法" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Java,博客, 个人网站">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>JavaSE复习总结(一)- ACen Blog</title>
+
+    <link rel="canonical" href="/post/javase1/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/syntax.css">
+    
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/docco.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">阿岑的部落</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/categories/study">study</a>
+                    </li>
+                    
+                    
+		    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/post-bg-coffee.jpeg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/java" title="Java">
+                            Java
+                        </a>
+                        
+                        <a class="tag" href="/tags/javase" title="JavaSE">
+                            JavaSE
+                        </a>
+                        
+                    </div>
+                    <h1>JavaSE复习总结(一)</h1>
+                    <h2 class="subheading">Java基础复习第一章节</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                 &#34;ACen&#34;
+                         
+                        on 
+                        Tuesday, November 12, 2019
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#javase复习总结-一">JavaSE复习总结(一)</a>
+<ul>
+<li><a href="#string和long">String和Long</a>
+<ul>
+<li><a href="#font-color-36648b-string-font"><strong><font color=#36648B >String</font></strong></a></li>
+<li><a href="#font-color-36648b-long-font"><strong><font color=#36648B >Long</font></strong></a></li>
+</ul></li>
+<li><a href="#常用关键字理解">常用关键字理解</a>
+<ul>
+<li><a href="#1-static">1、Static</a></li>
+<li><a href="#2-final">2、final</a></li>
+<li><a href="#3-try-catch-finally">3、try、catch、finally</a></li>
+<li><a href="#4-volatile">4、volatile</a></li>
+<li><a href="#5-transient">5、transient</a></li>
+<li><a href="#6-default">6、default</a></li>
+<li><a href="#7-注意点">7、注意点</a></li>
+</ul></li>
+<li><a href="#常用方法">常用方法</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<h1 id="javase复习总结-一">JavaSE复习总结(一)</h1>
+
+<p><br></p>
+
+<h2 id="string和long">String和Long</h2>
+
+<ul>
+<li><h3 id="font-color-36648b-string-font"><strong><font color=#36648B >String</font></strong></h3>
+
+<p><strong>1、不变性</strong></p>
+
+<p>String类被final修饰,说明String绝对不可能被继承，也就是说任何对String的操作方式，都不hi被继承覆写；</p>
+
+<p>String类中保存数据的是一个char数组value。value也是被final修饰，一旦被赋值，内存地址是绝对无法修改的。且它的访问权限是private，外部访问不到，String也没有开放出可以对value进行赋值的方法，所以说value一旦产生，内存地址就根本无法被修改。</p>
+
+<hr />
+
+<p><strong>2、字符串乱码</strong></p>
+
+<p>乱码的问题根源主要是两个：字符集不支持复杂汉字、二进制进行转化时字符集不匹配</p>
+
+<p>具体解决方法：</p>
+
+<p>1、所有可以指定字符集的地方强制指定字符集，如new String() 和getBytes(&ldquo;UTF-8&rdquo;)</p>
+
+<p>2、使用UTF-8这种能完整支持复杂汉字的字符集。</p>
+
+<hr />
+
+<p><strong>3、常见操作</strong></p>
+
+<ul>
+<li><p><strong>subString(int beginIndex,int endIndex)</strong>：方法底层使用字符数组范围截取的方法：Arrays.copyOfRange(字符数组，开始位置，结束位置）；目的是从数组字符中进行一段范围的拷贝。</p></li>
+
+<li><p><strong>toLowerCase()</strong>,<strong>toUpperCase()</strong>:小写，大写转换。</p></li>
+
+<li><p><strong>equals()</strong>和<strong>equalslgnoreCase()</strong>:相等判断，后者忽略大小写</p></li>
+
+<li><p><strong>replace()</strong>和<strong>replaceAll()</strong>和<strong>replaceFirst()</strong>:替换所有字符，批量替换字符串、替换遇到的第一个字符串。replace中可以有char和String的入参，分别表示替换所有字符和字符串，replace(&ldquo;,&rdquo;)和replace(&ldquo;&rdquo;,&ldquo;&rdquo;)。<font color=red>可以用replace(&ldquo;要删的字符&rdquo;,&ldquo;&rdquo;)删除字符</font>。</p></li>
+
+<li><p><strong>split()</strong> : 拆分，第一个参数为String类型，代表拆分的标准字符，第二个参数是int类型，表示限制拆分为几个元素。</p></li>
+
+<li><p><strong>join()</strong>:合并，第一个参数为String类型，代表合并的标准字符，第二个参数是合并的数据源，支持数组和list。</p></li>
+</ul></li>
+
+<li><h3 id="font-color-36648b-long-font"><strong><font color=#36648B >Long</font></strong></h3>
+
+<p><strong>1、缓存</strong></p>
+
+<p>Long自己实现了一种缓存机制，缓存从-128到127内所有的Long值，如果是这个范围中的Long的值，就不会初始化，而是直接从缓存中拿。<font color=red>使用Long多推荐使用valueOf，少使用parseLong是因为前者是从缓存区中拿值，如果命中缓存就可以减少资源开支，后者没有这个机制。</font></p></li>
+</ul>
+
+<h2 id="常用关键字理解">常用关键字理解</h2>
+
+<h3 id="1-static">1、Static</h3>
+
+<p>静态的、全局的，一旦被修饰，说明被修饰的东西在一定范围内是共享的，谁都可以访问。要注意并发读写的问题。它随着类加载而加载，随类灭亡而灭亡。<strong>类变量随类加载存放在方法区中，实例变量随对象建立在堆内存中</strong>。</p>
+
+<ul>
+<li><p><strong><font color=#36648B >修饰的对象</font></strong></p>
+
+<p>static只能修饰类变量、方法和方法块。如果静态变量是public的话，可以直接类名.变量名访问；静态方法代表该方法和当前类无关，任意类都可以直接访问(权限为public)；静态方法块常常用于启动前，初始化一些值。</p></li>
+
+<li><p><strong><font color=#36648B >初始化时机</font></strong></p>
+
+<ul>
+<li><p><font color=red>父类的静态变量和静态块比子类优先初始化</font>。</p></li>
+
+<li><p><font color=red>静态变量和静态块比类构造器优先化初始</font>。</p></li>
+
+<li><p>被static修饰的方法，在类初始化时候不会初始化，只有在被调用时才会被执行。</p></li>
+</ul></li>
+
+<li><p><strong><font color=#36648B >利弊</font></strong></p>
+
+<p>利：对对象的共享数据进行单独空间访问，节省空间。</p>
+
+<p>弊：生命周期过长，访问局限性。（只能访问静态）</p></li>
+</ul>
+
+<hr />
+
+<h3 id="2-final">2、final</h3>
+
+<ul>
+<li><p><font color=red>被final修饰的类，表示该类无法被继承</font></p></li>
+
+<li><p><font color=red>被final修饰的方法，表示改方法无法被覆写</font></p></li>
+
+<li><p><font color=red>被final修饰的变量，说明该变量在声明的时候，就必须初始化完成，而且以后也不能修改其内存的地址</font></p></li>
+</ul>
+
+<p>要注意的是，对于List、Map等集合类来说，被final修饰后，是可以修改其内部的值，但却无法修改其初始化时的内存值。</p>
+
+<hr />
+
+<h3 id="3-try-catch-finally">3、try、catch、finally</h3>
+
+<p><font color=red>1、finally先执行，在抛出catch异常</font></p>
+
+<p><font color=red>2、最终捕获的异常是catch中的异常，try抛出的异常已经被catch吃掉</font></p>
+
+<hr />
+
+<h3 id="4-volatile">4、volatile</h3>
+
+<p>意思为可见的，常用来修饰某个共享变量，意思是当共享变量的值被修改之后，会及时通知到其他线程上，其他线程就能知道当前共享变量的值已经被修改。</p>
+
+<hr />
+
+<h3 id="5-transient">5、transient</h3>
+
+<p>常用来修饰类变量，意思是当前变量无需进行序列化。在序列化时，就会忽略改变量。</p>
+
+<hr />
+
+<h3 id="6-default">6、default</h3>
+
+<p>一般用在接口的方法上，意思是对于该接口，子类是无需强制实现的，但自己必须有默认实现。</p>
+
+<hr />
+
+<h3 id="7-注意点">7、注意点</h3>
+
+<p>1、常常看见变量和方法被static和final两个关键字修饰，是为何？</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;答：1、变量和方法于此类无关，可以直接使用。比较方便。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;2、强调变量内存地址不可改变，方法不可继承覆写，强调了方法内部的稳定性。</p>
+
+<p>2、如何证明static静态变量和类无关？</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;答：1、我们不需要初始化类就可以直接使用静态变量；</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;2、在类中写main方法运行，即使不写初始化类的代码，静态变量都会自动初始化。</p>
+
+<p>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;3、静态变量只会初始化一次，初始化完成之后，不管我们再new多少个出来，都不会再初始化了。</p>
+
+<h2 id="常用方法">常用方法</h2>
+
+<p>Arrays方便数组使用，Collections方便集合使用。</p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/algorithm_backtracking/" data-toggle="tooltip" data-placement="top" title="算法总结(三)">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/jvmchap3-3/" data-toggle="tooltip" data-placement="top" title="虚拟机字节码执行引擎">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/algorithm" title="algorithm">
+                            algorithm
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/java" title="java">
+                            java
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/jvm" title="jvm">
+                            jvm
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="阿岑的部落" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:645207604@qq.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/img/weChat.jpg">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/ACen6XD">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; 阿岑的部落 2019
+                    <br>
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

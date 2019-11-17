@@ -167,12 +167,8 @@
                             Algorithm
                         </a>
                         
-                        <a class="tag" href="/tags/dfs" title="DFS">
-                            DFS
-                        </a>
-                        
-                        <a class="tag" href="/tags/bfs" title="BFS">
-                            BFS
+                        <a class="tag" href="/tags/fs" title="FS">
+                            FS
                         </a>
                         
                     </div>
@@ -184,7 +180,7 @@
                                  &#34;ACen&#34;
                          
                         on 
-                        Monday, November 11, 2019
+                        Saturday, November 9, 2019
                         
                         
                         
@@ -222,6 +218,8 @@
 <li><a href="#font-color-36648b-广度优先遍历-bfs-font"><strong><font color=#36648B >广度优先遍历(BFS)</font></strong></a></li>
 </ul></li>
 <li><a href="#两者的相似之处和区别">两者的相似之处和区别</a></li>
+<li><a href="#相关例题">相关例题</a></li>
+<li><a href="#总结">总结</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -264,6 +262,14 @@
 
 <p>深度搜索与广度搜索的控制结构和产生系统很相似，唯一的区别在于对扩展节点选取上。由于其保留了所有的前继节点，所以在产生后继节点时可以去掉一部分重复的节点，从而提高了搜索效率。这两种算法每次都扩展一个节点的所有子节点，而不同的是，<u>深度搜索下一次扩展的是本次扩展出来的子节点中的一个，而广度搜索扩展的则是本次扩展的节点的兄弟节点。在具体实现上为了提高效率,所以采用了不同的数据结构。</u></p>
 
+<h2 id="相关例题">相关例题</h2>
+
+<p><a href="https://leetcode-cn.com/list/problem">深度、广度优先</a></p>
+
+<h2 id="总结">总结</h2>
+
+<p>就是dfs（疯狂递归加回溯），bfs（类似于用队列实现的多叉树的层次遍历），bfs层序遍历到最新一层，如果当前节点就是我们要找到的结果，那么该层次（也就是当前树的深度）就是路径长度，必然是最短的。</p>
+
 <p><br></p>
 
 <p>内容主要参考来源：网络</p>
@@ -277,10 +283,15 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/jvmchap3-2/" data-toggle="tooltip" data-placement="top" title="虚拟机类加载机制">&larr;
+                        <a href="/post/jvmchap3-1/" data-toggle="tooltip" data-placement="top" title="字节码简介">&larr;
                             Previous Post</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/post/jvmchap3-2/" data-toggle="tooltip" data-placement="top" title="虚拟机类加载机制">Next
+                            Post &rarr;</a>
+                    </li>
                     
                 </ul>
 
@@ -305,6 +316,12 @@
                         
                         
                         
+                        <a href="/tags/algorithm" title="algorithm">
+                            algorithm
+                        </a>
+                        
+                        
+                        
                         
                         
                         
@@ -314,6 +331,8 @@
                         <a href="/tags/java" title="java">
                             java
                         </a>
+                        
+                        
                         
                         
                         
