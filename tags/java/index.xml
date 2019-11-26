@@ -6,10 +6,19 @@
     <description>Recent content in Java on 阿岑的部落</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 13 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 14 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://ACen6XD.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>JavaSE复习总结(二)</title>
+      <link>https://ACen6XD.github.io/post/javase2/</link>
+      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://ACen6XD.github.io/post/javase2/</guid>
+      <description>队列和阻塞队列 Queue接口:基础接口，定义了队列的三大类操作 新增： 1、add 队列慢的时候抛出异常 2、offer 队列满的时候返回false 查</description>
+    </item>
     
     <item>
       <title>虚拟机字节码执行引擎</title>
