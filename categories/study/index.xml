@@ -146,5 +146,14 @@
       <description>Java内存区域与内存溢出异常 运行时数据区域 程序计数器(Program Counter Register) &amp;amp;概念： &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;该</description>
     </item>
     
+    <item>
+      <title>JavaSE复习总结(三)</title>
+      <link>https://ACen6XD.github.io/post/javase3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://ACen6XD.github.io/post/javase3/</guid>
+      <description>队列和阻塞队列 Queue接口:基础接口，定义了队列的三大类操作 新增： 1、add 队列慢的时候抛出异常 2、offer 队列满的时候返回false 查</description>
+    </item>
+    
   </channel>
 </rss>
