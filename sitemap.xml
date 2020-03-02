@@ -4,7 +4,42 @@
   
   <url>
     <loc>https://ACen6XD.github.io/categories/</loc>
-    <lastmod>2019-11-16T00:00:00+00:00</lastmod>
+    <lastmod>2020-02-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ACen6XD.github.io/tags/java/</loc>
+    <lastmod>2020-02-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ACen6XD.github.io/tags/javase/</loc>
+    <lastmod>2020-02-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ACen6XD.github.io/post/javase3/</loc>
+    <lastmod>2020-02-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ACen6XD.github.io/post/</loc>
+    <lastmod>2020-02-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ACen6XD.github.io/categories/study/</loc>
+    <lastmod>2020-02-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ACen6XD.github.io/tags/</loc>
+    <lastmod>2020-02-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://ACen6XD.github.io/</loc>
+    <lastmod>2020-02-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -23,42 +58,12 @@
   </url>
   
   <url>
-    <loc>https://ACen6XD.github.io/post/</loc>
-    <lastmod>2019-11-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ACen6XD.github.io/tags/</loc>
-    <lastmod>2019-11-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://ACen6XD.github.io/categories/tech/</loc>
     <lastmod>2019-11-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://ACen6XD.github.io/</loc>
-    <lastmod>2019-11-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ACen6XD.github.io/tags/java/</loc>
-    <lastmod>2019-11-14T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ACen6XD.github.io/tags/javase/</loc>
-    <lastmod>2019-11-14T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://ACen6XD.github.io/post/javase2/</loc>
-    <lastmod>2019-11-14T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ACen6XD.github.io/categories/study/</loc>
     <lastmod>2019-11-14T00:00:00+00:00</lastmod>
   </url>
   
@@ -155,10 +160,6 @@
   <url>
     <loc>https://ACen6XD.github.io/post/jvmchap1/</loc>
     <lastmod>2019-10-15T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://ACen6XD.github.io/post/javase3/</loc>
   </url>
   
 </urlset>
